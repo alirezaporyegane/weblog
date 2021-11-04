@@ -117,30 +117,5 @@ class Application {
 }
 
 
-/**
- * @swagger
- * components:
- *  schemas:
- *    Brand:
- *      type: object
- *      required:
- *         - title
- *         - slug
- *         - arrangement
- *       properties:
- *          _id: 
- *             type: string
- *             description: the auto-generate id of the brand
- *          title:
- *              type: string
- *              description: the brand title
- *          slug:
- *              type: string
- *              description: the brand slug
- *      example:
- *        id: daskjh54sa5d544s
- *        title: Sumsung
- *        slug: sumsung
- */
 
 module.exports = Application
