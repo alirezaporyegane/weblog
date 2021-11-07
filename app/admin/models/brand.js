@@ -14,7 +14,7 @@ const brandSchema = new Schema({
     type: String,
     required: true
   },
-  arrangement: {
+  sortOrder: {
     type: Number,
     required: true
   },

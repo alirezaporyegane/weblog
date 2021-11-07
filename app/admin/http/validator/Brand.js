@@ -5,7 +5,7 @@ function brandValidator (data) {
     title: joi.string().required(),
     altName: joi.string(),
     slug: joi.string().required(),
-    arrangement: joi.number().integer().required(),
+    sortOrder: joi.number().integer().required(),
     tags: joi.array(),
     mataTitle: joi.string(),
     metaDescription: joi.string(),

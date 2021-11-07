@@ -22,7 +22,7 @@ class brand {
     .skip(skip)
     .limit(limit)
     .sort(Sort)
-    .select('_id title slug arrangement image otherName')
+    .select('_id title slug sortOrder image otherName')
     .select(include)
       .then(result => {
         res.status(200).json(result)
@@ -72,7 +72,7 @@ class brand {
   
     Brand.findById(id)
       .then(result => {
-        res.status(200).json(_.pick(result, ['_id', 'title', 'slug', 'arrangement', 'typeId', 'image', 'otherName', 'body']))
+        res.status(200).json(_.pick(result, ['_id', 'title', 'slug', 'sortOrder', 'typeId', 'image', 'otherName', 'body']))
       })
       .catch(err => {
         console.log(err)
@@ -91,7 +91,7 @@ class brand {
     })
   
     const brand = new Brand(_.pick(req.body, 
-      ['title','altName' ,'slug', 'arrangement', 'tags', 'mataTitle', 'metaDescription', 'typeId', 'image', 'otherName', 'body']))
+      ['title','altName' ,'slug', 'sortOrder', 'tags', 'mataTitle', 'metaDescription', 'typeId', 'image', 'otherName', 'body']))
   
     brand.save()
       .then(result => {
@@ -128,10 +128,10 @@ class brand {
     })
     
     Brand.findByIdAndUpdate({ _id: id }, _.pick(req.body, 
-      ['title','altName' ,'slug', 'arrangement', 'tags', 'mataTitle', 'metaDescription', 'typeId', 'image', 'otherName', 'body']))
+      ['title','altName' ,'slug', 'sortOrder', 'tags', 'mataTitle', 'metaDescription', 'typeId', 'image', 'otherName', 'body']))
       .then(result => {
         console.log(result)
-        res.status(200).json(_.pick(result, ['_id' ,'title', 'slug', 'arrangement']))
+        res.status(200).json(_.pick(result, ['_id' ,'title', 'slug', 'sortOrder']))
       })
       .catch(err => {
         console.log(err)
