@@ -1,11 +1,11 @@
-const express = require('express'),
-userController = require('../http/controller/User'),
-router =  express.Router(),
+const { Router } = require('express'),
+router = Router(),
+{ getCode, sendCode, login, register } = require('../http/controller/User'),
 { authUsre } = require('../http/middleware/check-auth')
 
-router.post('/register', userController.register)
-router.post('/login', userController.login)
-router.get('/sendCode', authUsre, userController.sendCode)
-router.post('/getCode', authUsre, userController.getCode)
+router.post('/register', register)
+router.post('/login', login)
+router.get('/sendCode', authUsre, sendCode)
+router.post('/getCode', authUsre, getCode)
 
 module.exports = router
