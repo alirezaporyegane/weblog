@@ -1,6 +1,6 @@
-const express = require('express'),
-router = express.Router(),
-brandController = require('../http/controller/Brand'),
+const { Router } = require('express'),
+router = Router(),
+{ getAll, getById, getCount, create, update, remove } = require('../http/controller/Brand'),
 { authUsre, admin } = require('../http/middleware/check-auth')
 
 /**
@@ -28,13 +28,11 @@ brandController = require('../http/controller/Brand'),
  *         author: Alexander K. Dewdney
  */
 
-router.get('/', [authUsre, admin], brandController.getAll)
-
-
-router.get('/count', [authUsre, admin], brandController.getCount)
-router.get('/:id', [authUsre, admin], brandController.getById)
-router.post('/', [authUsre, admin], brandController.create)
-router.put('/:id', [authUsre, admin], brandController.update)
-router.delete('/:brandId', [authUsre, admin], brandController.delete)
+router.get('/', getAll)
+router.get('/count', getCount)
+router.get('/:id', getById)
+router.post('/', create)
+router.put('/:id', update)
+router.delete('/:brandId', remove)
 
 module.exports = router

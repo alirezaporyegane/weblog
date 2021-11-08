@@ -142,7 +142,7 @@ class brand {
       }, {new: true})
   }
 
-  async delete (req, res) {
+  async remove (req, res) {
     const id = req.params.brandId
 
     if (!id) return res.status(400).json({
