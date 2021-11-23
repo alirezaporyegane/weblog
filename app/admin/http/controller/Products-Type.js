@@ -33,6 +33,32 @@ class ProductsType {
         })
   }
 
+  getInfo (req, res) {
+    const skip = req.query.skip ? parseInt(req.query.skip) : ''
+    const limit = req.query.limit ? parseInt(req.query.limit) : ''
+
+    ProductSetType.aggregate([
+      { $project: {
+          _id: 0,
+          value: "$_id",
+          text: "$title"
+        }
+      },
+      { $limit: limit },
+      { $skip: skip }
+    ])
+    .then(result => {
+      res.status(200).json(result)
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({
+        msg: 'Internal Server Error',
+        code: 500
+      })
+    })
+  }
+
   async getCount (req, res) {
     const title = req.query.title ? req.query.title : ''
 
@@ -44,10 +70,9 @@ class ProductsType {
         res.status(200).json(result)
       })
       .catch(err => {
-        console.log(err)
         res.status(500).json({
-          msg: 'Get has Failed',
-          error: err
+          msg: 'Internal Server Error',
+          code: 500
         })
       })
   }
