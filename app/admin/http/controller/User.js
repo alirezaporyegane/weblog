@@ -97,7 +97,8 @@ class user {
 
         myCache.set(user.phone, number)
 
-        const api = Kavenegar.KavenegarApi({apikey: '785141742B50564B342F356C4D6C617876514C34542F634C4564384D435850596F4A2F2F596E51766E546B3D'}); 
+        const api = Kavenegar.KavenegarApi({ apikey: process.env.apiKeyKAvenegar });
+
         api.Send({ 
           message: `برای ورود به سایت کد ${number} در سایت وارد کنید`,
           sender: "1000596446",

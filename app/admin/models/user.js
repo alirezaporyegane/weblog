@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken')
-const config = require('config')
+const config = require('config');
+const { string } = require('joi');
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
@@ -10,7 +11,13 @@ const userSchema = new Schema({
   },
   phone: {
     type: String,
-    required: true
+    required: true,
+    unique: true
+  },
+  emiil: {
+    type: string,
+    required: true,
+    unique: true
   },
   password: {
     type: String,

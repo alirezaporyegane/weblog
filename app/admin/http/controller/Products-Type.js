@@ -34,29 +34,24 @@ class ProductsType {
   }
 
   getInfo (req, res) {
-    const skip = req.query.skip ? parseInt(req.query.skip) : ''
-    const limit = req.query.limit ? parseInt(req.query.limit) : ''
+    const skip = parseInt(req.query.skip)
+    const limit = parseInt(req.query.limit)
 
-    ProductSetType.aggregate([
-      { $project: {
-          _id: 0,
-          value: "$_id",
-          text: "$title"
-        }
-      },
-      { $limit: limit },
-      { $skip: skip }
-    ])
-    .then(result => {
-      res.status(200).json(result)
+    ProductSetType.aggregate().project({
+      text: '$title',
+      value: '$_id',
+      _id: 0
     })
-    .catch(err => {
-      console.log(err);
-      res.status(500).json({
-        msg: 'Internal Server Error',
-        code: 500
+      .then(result => {
+        res.status(200).json(result)
       })
-    })
+      .catch(err => {
+        console.log(err);
+        res.status(500).json({
+          msg: 'Internal Server Error',
+          code: 500
+        })
+      })
   }
 
   async getCount (req, res) {

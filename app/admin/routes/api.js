@@ -35,7 +35,7 @@ router.use('/pages/home-page', pagesRoutes);
 router.use('/post-categories', postCategoriesRoutes);
 router.use('/posts', postRoutes);
 router.use('/product-relation-types', productRelationTypesRoutes);
-router.use('/product-set-type', productsSetTypeRoutes);
+router.use('/product-types', productsSetTypeRoutes);
 router.use('/product-unit', productsUnitRoutes);
 router.use('/products', productsRoutes);
 router.use('/setting', settingRoutes);
