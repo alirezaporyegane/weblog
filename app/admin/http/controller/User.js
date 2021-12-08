@@ -32,6 +32,7 @@ class user {
             } else {
               const user = new User({
                 userName: req.body.userName,
+                email: req.body.email,
                 phone: phone,
                 password: hash,
               })
@@ -39,7 +40,7 @@ class user {
                 .then(result => {
                   const token = result.generateToken()
 
-                  res.status(200).json({..._.pick(result, ['_id']), token: token})
+                  res.status(200).json({..._.pick(result, ['_id', 'userName', 'phone' ,'email', 'role' ]), token: token})
                 })
                 .catch(err => {
                   console.log(err)
@@ -75,7 +76,7 @@ class user {
             })
           } else if (result) {
             const token = user[0].generateToken()
-            return res.status(200).json({active: user[0].active, user: result, token : token})
+            return res.status(200).json({active: user[0].active, isLogin: result, token : token, ..._.pick(user[0], ['userName', 'role', 'email', 'phone'])})
           } else {
             res.status(401).json({
               msg: 'Auth Failed'

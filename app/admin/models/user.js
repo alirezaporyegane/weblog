@@ -14,8 +14,8 @@ const userSchema = new Schema({
     required: true,
     unique: true
   },
-  emiil: {
-    type: string,
+  email: {
+    type: String,
     required: true,
     unique: true
   },
@@ -37,6 +37,8 @@ userSchema.methods.generateToken = function () {
   const data = {
     _id: this._id,
     phone: this.phone,
+    userName: this.userName,
+    email: this.email,
     role: this.role
   }
 
