@@ -1,15 +1,18 @@
 const mongoose = require('mongoose'),
 _ = require('lodash'),
-DeliveryMethodsModle = require('../../models/deliveryMethods'),
-{ validateDeliveryMethods } = require('../validator/DeliveryMethods');
+DeliveryMethodsModle = require('../../models/Delivery-Methods'),
+{ validateDeliveryMethods } = require('../validator/Delivery-Methods');
 
 class DeliveryMethodsController {
   async getAll (req, res) {
     const skip = req.query.skip ? parseInt(req.query.skip) : ''
     const limit = req.query.limit ? parseInt(req.query.limit) : ''
     const include = req.query.include ? req.query.include : ''
+    const name = req.query.name ? req.query.name : ''
 
-    DeliveryMethodsModle.find()
+    DeliveryMethodsModle.find(
+      { name: { $regex: name } }
+    )
       .skip(skip)
       .limit(limit)
       .select('_id name sortOrder description image hideFee rangesFeeType payOnDelivery calculationMethod baseFee ranges active')
@@ -26,7 +29,10 @@ class DeliveryMethodsController {
   }
 
   async getCount (req, res) {
-    DeliveryMethodsModle.find()
+    const name = req.query.name ? req.query.name : ''
+    DeliveryMethodsModle.find(
+      { name: { $regex: name } }
+    )
     .countDocuments()
       .then(result => {
         res.status(200).json(result)
@@ -65,21 +71,21 @@ class DeliveryMethodsController {
       })
   }
 
-  
+
   async create (req, res) {
     const { error } = validateDeliveryMethods(req.body)
     if (error) return res.status(400).json({
       msg: error.message,
       code: 400
     })
-  
-    const deliveryMethodsModle = new DeliveryMethodsModle({..._.pick(req.body, 
+
+    const deliveryMethodsModle = new DeliveryMethodsModle({..._.pick(req.body,
       ['name', 'sortOrder', 'image', 'hideFee', 'rangesFeeType', 'payOnDelivery', 'calculationMethod', 'baseFee', 'ranges', 'active'])
     })
-  
+
     deliveryMethodsModle.save()
       .then(result => {
-        res.status(200).json(_.pick(result, 
+        res.status(200).json(_.pick(result,
           ['_id', 'name', 'sortOrder', 'image', 'hideFee', 'rangesFeeType', 'calculationMethod', 'payOnDelivery', 'baseFee', 'ranges', 'active']))
       })
       .catch(err => {
@@ -97,20 +103,20 @@ class DeliveryMethodsController {
       msg: 'Inventories Not Found',
       code: 400
     })
-  
+
     if (!mongoose.isValidObjectId(id))
       return res.status(400).json({
         msg: 'Bad Request',
         code: 400
       })
-  
+
     const {error} = validateDeliveryMethods(req.body)
     if (error) return res.status(400).json({
       msg: error.message,
       success: false
     })
-    
-    DeliveryMethodsModle.findByIdAndUpdate({ _id: id }, _.pick(req.body, 
+
+    DeliveryMethodsModle.findByIdAndUpdate({ _id: id }, _.pick(req.body,
       ['name', 'sortOrder', 'image', 'hideFee', 'rangesFeeType', 'calculationMethod', 'payOnDelivery', 'baseFee', 'ranges', 'active']))
       .then(result => {
         res.status(200).json(_.pick(result, ['_id', 'name', 'sortOrder', 'image', 'hideFee', 'rangesFeeType', 'payOnDelivery', 'calculationMethod', 'baseFee', 'ranges', 'active']))
@@ -130,13 +136,13 @@ class DeliveryMethodsController {
       msg: 'Inventories Not Found',
       code: 400
     })
-  
+
     if (!mongoose.isValidObjectId(id))
       return res.status(400).json({
         msg: 'Bad Request',
         code: 400
       })
-  
+
       DeliveryMethodsModle.remove({ _id: id })
       .then(result => {
         res.status(200).json(result)

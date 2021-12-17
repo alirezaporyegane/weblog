@@ -1,5 +1,5 @@
 const mongoose = require('mongoose'),
-Order = require('../../models/order'),
+Order = require('../../models/Order'),
 { ValidateOrder } = require('../validator/Order');
 
 class order {
@@ -44,13 +44,13 @@ class order {
       msg: 'Id Not Found',
       success: false
     })
-  
+
     if (!mongoose.isValidObjectId(id))
       return res.status(400).json({
         msg: 'Id Is Not Correct',
         success: false
-      }) 
-  
+      })
+
     Order.findById(id)
       .then(result => {
         console.log(result)
@@ -67,7 +67,7 @@ class order {
 
   async create (req, res) {
     const { error } = ValidateOrder(req.body);
-    if (error) 
+    if (error)
       return res.status(400).json({
         message: error.message,
         success: false
@@ -77,7 +77,7 @@ class order {
       title: req.body.title,
       quntity: req.body.quntity,
     })
-  
+
     order.save()
       .then(result => {
         console.log(result)
@@ -99,19 +99,19 @@ class order {
       msg: 'Id Not Found',
       success: false
     })
-  
+
     if (!mongoose.isValidObjectId(id))
       return res.status(400).json({
         msg: 'Id Is Not Correct',
         success: false
       })
-  
+
     const { error } = ValidateOrder(req.body)
     if (error) return res.status(400).json({
       msg: error.message,
       success: false
     })
-  
+
     Order.findByIdAndUpdate((id), {
       title: req.body.title,
       quntity: req.body.quntity

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose'),
 _ = require('lodash'),
-CurrenciesModel = require('../../models/currencies'),
-CurrencyBaseModel = require('../../models/baseCurrency'),
+CurrenciesModel = require('../../models/Currencies'),
+CurrencyBaseModel = require('../../models/Base-Currency'),
 { ValidatorCurrencies } = require('../validator/Currencies');
 
 class CurrenciesController {
@@ -17,17 +17,31 @@ class CurrenciesController {
     )
       .skip(skip)
       .limit(limit)
-      .select(['_id','id' , 'name', 'sortOrder', 'image', 'rate', 'symbol','precision', 'active'])
+      .select(['_id' , 'name', 'sortOrder', 'image', 'rate', 'symbol','precision', 'active'])
       .select(include)
         .then(result => {
           res.status(200).json(result)
         })
-        .catch(err => {
+        .catch(() => {
           res.status(500).json({
-            error: err,
+            msg: 'Internal Server Error',
             code: 500
           })
         })
+  }
+
+  async getInfo (req, res) {
+    CurrenciesModel.find()
+    .select("_id name")
+      .then(result => {
+        res.status(200).json(result)
+      })
+      .catch(() => {
+        res.status(500).json({
+          msg: 'Internal Server Error',
+          code: 500
+        })
+      })
   }
 
   async getCount (req, res) {
@@ -41,9 +55,9 @@ class CurrenciesController {
       .then(result => {
         res.status(200).json(result)
       })
-      .catch(err => {
+      .catch(() => {
         res.status(500).json({
-          error: err,
+          msg: 'Internal Server Error',
           code: 500
         })
       })
@@ -51,11 +65,6 @@ class CurrenciesController {
 
   async getById (req, res) {
     const id = req.params.id
-
-    if (!id) return res.status(400).json({
-      msg: 'Currencies Not Found',
-      code: 400
-    })
 
     if (!mongoose.isValidObjectId(id))
       return res.status(400).json({
@@ -67,33 +76,33 @@ class CurrenciesController {
       .then(result => {
         res.status(200).json(_.pick(result, ['_id', 'id', 'name', 'sortOrder', 'image', 'rate', 'symbol','precision', 'active']))
       })
-      .catch(err => {
+      .catch(() => {
         res.status(500).json({
-          error: err,
+          code: 'Internal Server Error',
           code: 500
         })
       })
   }
 
-  
+
   async create (req, res) {
     const {error} = ValidatorCurrencies(req.body)
     if (error) return res.status(400).json({
-      msg: error.message,
+      msg: 'Bad Request',
       code: 400
     })
-  
-    const currenciesModel = new CurrenciesModel(_.pick(req.body, 
+
+    const currenciesModel = new CurrenciesModel(_.pick(req.body,
       ['id' ,'name', 'sortOrder', 'image', 'rate', 'symbol','precision', 'active']))
-  
+
     currenciesModel.save()
       .then(result => {
-        res.status(200).json(_.pick(result, 
+        res.status(200).json(_.pick(result,
           ['_id', 'id', 'name', 'sortOrder', 'image', 'rate', 'symbol','precision', 'active']))
       })
-      .catch(err => {
+      .catch(() => {
         res.status(500).json({
-          error: err,
+          msg: 'Internal Server Error',
           code: 500
         })
       })
@@ -102,31 +111,26 @@ class CurrenciesController {
   async update (req, res) {
     const id = req.params.id
 
-    if (!id) return res.status(400).json({
-      msg: 'Currencies Not Found',
-      code: 400
-    })
-  
     if (!mongoose.isValidObjectId(id))
       return res.status(400).json({
         msg: 'Bad Request',
         code: 400
       })
-  
-    const {error} = ValidatorCurrencies(req.body)
+
+    const { error } = ValidatorCurrencies(req.body)
     if (error) return res.status(400).json({
-      msg: error.message,
+      msg: 'Bad Request',
       success: false
     })
-    
-    CurrenciesModel.findByIdAndUpdate({ _id: id }, _.pick(req.body, 
+
+    CurrenciesModel.findByIdAndUpdate({ _id: id }, _.pick(req.body,
       ['name', 'sortOrder', 'image', 'id', 'rate', 'symbol','precision', 'active']))
       .then(result => {
         res.status(200).json(_.pick(result, ['_id', 'name', 'sortOrder', 'id', 'image', 'rate', 'symbol','precision', 'active']))
       })
-      .catch(err => {
+      .catch(() => {
         res.status(500).json({
-          error: err,
+          msg: 'Internal Server Error',
           code: 500
         })
       })
@@ -135,39 +139,52 @@ class CurrenciesController {
   async remove (req, res) {
     const id = req.params.id
 
-    if (!id) return res.status(400).json({
-      msg: 'Currencies Not Found',
-      code: 400
-    })
-  
     if (!mongoose.isValidObjectId(id))
       return res.status(400).json({
         msg: 'Bad Request',
         code: 400
       })
-  
+
       CurrenciesModel.remove({ _id: id })
       .then(result => {
         res.status(200).json(result)
       })
-      .catch(err => {
+      .catch(() => {
         res.status(500).json({
-          error: err,
+          msg: 'Internal Server Error',
           code: 500
         })
       })
   }
 
   async updateBaseCurrency (req, res) {
-    CurrencyBaseModel.updateOne({} ,_.pick(req.body, ['baseId', 'displayId', 'fiscalId']))
-      .then(result => {
-        res.status(200).json(result)
-      })
-      .catch(err => {
-        res.status(500).json({
-          error: err,
-          code: 500
-        })
+    CurrencyBaseModel.find()
+      .then(data => {
+        if (data.length === 0) {
+          const currencyBase = new CurrencyBaseModel(_.pick(res.data, ['baseId','displayId', 'fiscalId']))
+
+          currencyBase.save()
+            .then(result => {
+              res.status(200).json(result)
+            })
+            .catch(() => {
+              res.status(500).json({
+                msg: 'Internal Server Error',
+                code: 500
+              })
+            })
+        } else {
+          CurrencyBaseModel.updateOne({}, _.pick(req.body, ['baseId','displayId', 'fiscalId']), { new: true })
+            .then(result => {
+              res.status(200).json(result)
+            })
+            .catch(() => {
+              res.status(500).json({
+                msg: 'Internal Server Error',
+                code: 500
+              })
+            })
+        }
       })
   }
 
@@ -176,9 +193,9 @@ class CurrenciesController {
       .then(result => {
         res.status(200).json(result)
       })
-      .catch(err => {
+      .catch(() => {
         res.status(500).json({
-          error: err,
+          msg: 'Internal Server Error',
           code: 500
         })
       })

@@ -1,30 +1,53 @@
 const mongoose = require('mongoose'),
 _ = require('lodash'),
-banksModel = require('../../models/banks'),
+banksModel = require('../../models/Banks'),
 { validatorBanks } = require('../validator/Banks');
 
 class Banks {
   async getAll (req, res) {
     const skip = req.query.skip ? parseInt(req.query.skip) : ''
     const limit = req.query.limit ? parseInt(req.query.limit) : ''
-    const include = req.query.include ? req.query.include : ''
-    const Sort = req.query.sort ? req.query.sort : ''
+    const Sort = req.query.sort ? eval(`({${req.query.sort}})`) : ''
 
-    banksModel.find()
-      .skip(skip)
-      .limit(limit)
-      .sort(Sort)
-      .select('_id name logo code active')
-      .select(include)
-        .then(result => {
-          res.status(200).json(result)
-        })
-        .catch(err => {
-          res.status(500).json({
-            error: err,
-            code: 500
-          })
-        })
+    const name = req.query.name ? String(req.query.name) : ''
+    const code = req.query.code ? String(req.query.code) : ''
+
+    try {
+        const result = await banksModel.find({ name: { $regex: name }, code: { $regex: code }})
+        .skip(skip)
+        .limit(limit)
+        .sort(Sort)
+        .select('_id name logo code active')
+
+        res.status(200).json(result)
+    } catch (err) {
+      res.status(500).json({
+        msg: 'Internal Server Error',
+        code: 500
+      })
+    }
+  }
+
+  async getInfo (req, res) {
+    try {
+      const result = banksModel.aggregate([
+        {
+          $project: {
+            _id: 0,
+            text: "$name",
+            value: "$_id"
+          }
+        }
+      ])
+
+      res.status(200).json(result)
+    } catch (err) {
+      res.status(500).json({
+        msg: 'Internal Server Error',
+        code: 500
+      })
+    }
+
   }
 
   async getCount (req, res) {
@@ -33,9 +56,9 @@ class Banks {
       .then(result => {
         res.status(200).json(result)
       })
-      .catch(err => {
+      .catch(() => {
         res.status(500).json({
-          error: err,
+          msg: 'Internal Server Error',
           code: 500
         })
       })
@@ -43,11 +66,6 @@ class Banks {
 
   async getById (req, res) {
     const id = req.params.id
-
-    if (!id) return res.status(400).json({
-      msg: 'Banks Not Found',
-      code: 400
-    })
 
     if (!mongoose.isValidObjectId(id))
       return res.status(400).json({
@@ -59,34 +77,34 @@ class Banks {
       .then(result => {
         res.status(200).json(_.pick(result, ['_id', 'name', 'logo', 'code', 'active']))
       })
-      .catch(err => {
+      .catch(() => {
         res.status(500).json({
-          error: err,
+          msg: 'Internal Server Error',
           code: 500
         })
       })
   }
 
-  
+
   async create (req, res) {
     const { error } = validatorBanks(req.body)
     if (error) return res.status(400).json({
-      msg: error.message,
+      msg: 'Bad Request',
       code: 400
     })
-  
-    const BanksModel = new banksModel({..._.pick(req.body, 
+
+    const BanksModel = new banksModel({..._.pick(req.body,
       ['name', 'logo', 'code', 'active'])
     })
-  
+
     BanksModel.save()
       .then(result => {
-        res.status(200).json(_.pick(result, 
+        res.status(200).json(_.pick(result,
           ['_id' ,'name', 'logo', 'code', 'active']))
       })
       .catch(err => {
         res.status(500).json({
-          error: err,
+          msg: 'Internal Server Error',
           code: 500
         })
       })
@@ -95,31 +113,26 @@ class Banks {
   async update (req, res) {
     const id = req.params.id
 
-    if (!id) return res.status(400).json({
-      msg: 'Banks Not Found',
-      code: 400
-    })
-  
     if (!mongoose.isValidObjectId(id))
       return res.status(400).json({
         msg: 'Bad Request',
         code: 400
       })
-  
+
     const {error} = validatorBanks(req.body)
     if (error) return res.status(400).json({
-      msg: error.message,
+      msg: 'Bad Request',
       success: false
     })
-    
-    banksModel.findByIdAndUpdate({ _id: id }, _.pick(req.body, 
+
+    banksModel.findByIdAndUpdate({ _id: id }, _.pick(req.body,
       ['name', 'logo', 'code', 'active']))
       .then(result => {
         res.status(200).json(_.pick(result, ['_id' ,'name', 'logo', 'code', 'active']))
       })
       .catch(err => {
         res.status(500).json({
-          error: err,
+          msg: 'Internal Server Error',
           code: 500
         })
       })
@@ -128,24 +141,19 @@ class Banks {
   async remove (req, res) {
     const id = req.params.id
 
-    if (!id) return res.status(400).json({
-      msg: 'Banks Not Found',
-      code: 400
-    })
-  
     if (!mongoose.isValidObjectId(id))
       return res.status(400).json({
         msg: 'Bad Request',
         code: 400
       })
-  
+
       banksModel.remove({ _id: id })
       .then(result => {
         res.status(200).json(result)
       })
       .catch(err => {
         res.status(500).json({
-          error: err,
+          msg: 'Internal Server Error',
           code: 500
         })
       })

@@ -1,5 +1,5 @@
 const _ = require('lodash'),
-Pages = require('../../models/pages');
+Pages = require('../../models/Pages');
 
 class pagescontroller {
   async getone (req, res) {

@@ -1,23 +1,21 @@
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken')
-const config = require('config');
-const { string } = require('joi');
+const config = require('config')
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
   userName: {
     type: String,
-    enum: [ 'root' ]
-  },
-  phone: {
-    type: String,
-    required: true,
-    unique: true
+    enum: [ 'root' ],
+    require: true
   },
   email: {
     type: String,
-    required: true,
-    unique: true
+    require: true
+  },
+  phone: {
+    type: String,
+    required: true
   },
   password: {
     type: String,
@@ -37,8 +35,6 @@ userSchema.methods.generateToken = function () {
   const data = {
     _id: this._id,
     phone: this.phone,
-    userName: this.userName,
-    email: this.email,
     role: this.role
   }
 

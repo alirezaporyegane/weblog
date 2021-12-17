@@ -1,6 +1,6 @@
-const { Router } = require('express'),
-router = Router(),
-{ getCode, sendCode, login, register } = require('../http/controller/User'),
+const express = require('express'),
+{ register, login, sendCode, getCode } = require('../http/controller/User'),
+router =  express.Router(),
 { authUsre } = require('../http/middleware/check-auth')
 
 router.post('/register', register)

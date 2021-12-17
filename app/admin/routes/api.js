@@ -1,45 +1,25 @@
 const router = require('express').Router()
 
-const bankAccountsRoutes = require('./bank-accounts');
-const banksRoutes = require('./banks');
-const brandRoutes = require('./brand');
-const currenciesRoutes = require('./currencies');
-const customerRoutes = require('./customers');
-const deliveryMethodsRoutes = require('./deliveryMethods');
-const fileRoutes = require('./files');
-const inventoriesRoutes = require('./inventories');
-const menuRoutes = require('./menu');
-const orderRoutes = require('./order');
-const pagesRoutes = require('./pages'); 
-const postCategoriesRoutes = require('./postCategories');
-const postRoutes = require('./post');
-const productRelationTypesRoutes = require('./productRelationTypes');
-const productsRoutes = require('./product');
-const productsSetTypeRoutes = require('./products-type');
-const productsUnitRoutes = require('./products-unit');
-const settingRoutes = require('./setting');
-const userRoutes = require('./user');
-const SetRoutes = require('./Set')
-
-router.use('/bank-accounts', bankAccountsRoutes);
-router.use('/banks', banksRoutes);
-router.use('/brands', brandRoutes);
-router.use('/currencies', currenciesRoutes);
-router.use('/customers', customerRoutes);
-router.use('/delivery-methods', deliveryMethodsRoutes);
-router.use('/files', fileRoutes);
-router.use('/inventories', inventoriesRoutes);
-router.use('/menu', menuRoutes);
-router.use('/orders', orderRoutes);
-router.use('/pages/home-page', pagesRoutes);
-router.use('/post-categories', postCategoriesRoutes);
-router.use('/posts', postRoutes);
-router.use('/product-relation-types', productRelationTypesRoutes);
-router.use('/product-types', productsSetTypeRoutes);
-router.use('/product-unit', productsUnitRoutes);
-router.use('/products', productsRoutes);
-router.use('/setting', settingRoutes);
-router.use('/user', userRoutes);
-// router.use('/set', SetRoutes);
+router.use('/bank-accounts', require('./Bank-Accounts'));
+router.use('/banks', require('./Banks'));
+router.use('/brands', require('./Products/Products-Brand'));
+router.use('/currencies', require('./Currencies'));
+router.use('/customers', require('./Customers'));
+router.use('/delivery-methods', require('./Delivery-Methods'));
+router.use('/files', require('./Files'));
+router.use('/inventories', require('./Inventories'));
+router.use('/menu', require('./Menu'));
+router.use('/orders', require('./Order'));
+router.use('/pages/', require('./Pages'));
+router.use('/pages/home-page', require('./HomePage'));
+router.use('/post-categories', require('./Post/Post-Categories'));
+router.use('/posts', require('./Post/Post'));
+router.use('/product-relation-types', require('./Products/Product-Relation-Types'));
+router.use('/product-type', require('./Products/Products-Type'));
+router.use('/product-unit', require('./Products/Products-Unit'));
+router.use('/product-group', require('./Products/Products-Group'))
+router.use('/products', require('./Products/Product'));
+router.use('/setting', require('./Setting'));
+router.use('/user', require('./User'));
 
 module.exports = router

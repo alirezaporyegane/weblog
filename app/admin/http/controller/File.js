@@ -1,5 +1,4 @@
-const File = require('../../models/file'),
-mongoose = require('mongoose')
+const File = require('../../models/Files');
 
 class FileController {
   async create (req, res) {

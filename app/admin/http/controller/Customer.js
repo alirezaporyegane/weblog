@@ -43,13 +43,13 @@ class customer {
       msg: 'Id Not Found',
       success: false
     })
-  
+
     if (!mongoose.isValidObjectId(id))
     return res.status(400).json({
       msg: 'Bad Id',
       success: false
     })
-  
+
     Customer.findById(id)
       .then(result => {
         console.log(result)
@@ -130,20 +130,20 @@ class customer {
       })
     }
 
-    async delete (req, res) {
+    async remove (req, res) {
       const id = req.params.id
 
       if (!id) return res.status(400).json({
         msg: 'Id Not Found',
         success: false
       })
-    
+
       if (!mongoose.isValidObjectId(id))
       return res.status(400).json({
         msg: 'Bad Id',
         success: false
       })
-    
+
       Customer.findByIdAndRemove({ _id: id })
         .then(result => {
           res.status(200).json(result)

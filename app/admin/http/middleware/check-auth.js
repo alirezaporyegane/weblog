@@ -5,8 +5,8 @@ const authUsre = (req, res, next) => {
   try {
     const token = req.header('x-auth-token');
     if (!token) return res.status(401).json({
-      success: false,
-      msg: 'Auth Failed'
+      msg: 'Unauthorized',
+      code: 401
     })
 
     const User = jwt.verify(token, config.get('secretKey'))
@@ -15,7 +15,8 @@ const authUsre = (req, res, next) => {
     next()
   } catch (error) {
     return res.status(401).json({
-      msg: 'Auth Failed'
+      msg: 'Unauthorized',
+      code: 401
     })
   }
 }
@@ -25,9 +26,15 @@ const admin = (req, res, next) => {
     if (req.user.role === "admin") {
       next()
     } else
-      return res.status(401).json({ msg: 'you are not admin'})
+      return res.status(401).json({ 
+        msg: 'Unauthorized',
+        code: 401
+      })
   } catch (err) {
-    console.log(err)
+    res.status(500).json({
+      msg: 'Internal Server Error',
+      code: 500
+    })
   }
 }
 

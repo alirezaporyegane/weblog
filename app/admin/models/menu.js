@@ -1,10 +1,11 @@
 const mongoose = require('mongoose'),
-Schema = mongoose.Schema,
-ObjectId = Schema.ObjectId;
+Schema = mongoose.Schema;
 
 const menuSchema = new Schema({
   title: {
     type: String,
+    max: 250,
+    min: 3
   },
   url: {
     type: String
@@ -19,7 +20,7 @@ const menuSchema = new Schema({
     type: String
   },
   parentId: {
-    type: ObjectId
+    type: String,
   },
   components: {
     type: String
@@ -32,4 +33,10 @@ const menuSchema = new Schema({
   }
 })
 
-module.exports = mongoose.model('Menu', menuSchema)
+if (mongoose.models.Menu) {
+  Menu = mongoose.model('Menu');
+} else {
+  Menu = mongoose.model('Menu', menuSchema);
+}
+
+module.exports = Menu

@@ -1,10 +1,10 @@
 const express = require('express'),
 router = express.Router(),
-fileControllre = require('../http/controller/File'),
+{create, remove, update } = require('../http/controller/File'),
 upload  = require('../http/middleware/upload')
 
-router.post('/', upload.single('image'), fileControllre.create)
-router.delete('/:filename', fileControllre.remove)
-router.put('/:filename', upload.single('image'), fileControllre.update)
+router.post('/', upload.single('image'), create)
+router.delete('/:filename', remove)
+router.put('/:filename', upload.single('image'), update)
 
 module.exports = router
