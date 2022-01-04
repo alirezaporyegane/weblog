@@ -4,6 +4,6 @@ router = express.Router(),
 { getAll, updateBranding } = require('../http/controller/Setting')
 
 router.put('/branding', [authUsre, admin], updateBranding)
-router.get('/', [authUsre, admin], getAll)
+router.get('/', getAll)
 
 module.exports = router

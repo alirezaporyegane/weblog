@@ -2,6 +2,11 @@ const mongoose = require('mongoose'),
 Schema = mongoose.Schema;
 
 const menuSchema = new Schema({
+  _id: {
+    type: String,
+    required: true,
+    unique: true
+  },
   title: {
     type: String,
     max: 250,
@@ -29,7 +34,7 @@ const menuSchema = new Schema({
     type: Number
   },
   availability: {
-    type: String
+    type: Number
   }
 })
 

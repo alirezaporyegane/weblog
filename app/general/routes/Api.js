@@ -1,13 +1,12 @@
 const express = require('express');
 const router = express.Router();
 
-const mainRoutes = require('./Menu');
-const postRoutes = require('./Posts');
-const postCategoriesRoutes = require('./PostCategories');
-
-router.use('/menus', mainRoutes)
-router.use('/post', postRoutes)
-router.use('/post-categories', postCategoriesRoutes)
+router.use('/menus', require('./Menu'))
+router.use('/pages/home-page', require('./HomePage'))
+router.use('/pages', require('./Pages'))
+router.use('/post-categories', require('./PostCategories'))
+router.use('/post', require('./Posts'))
+router.use('/widget-areas', require('./WidgetArea'))
 
 
 module.exports = router;

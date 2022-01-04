@@ -80,6 +80,7 @@ class Application {
   }
 
   setupRoutes () {
+    app.use('/api', require('./licence/routes/Api'))
     app.use('/api/admin', require('./admin/routes/Api'))
     app.use('/api/public', require('./general/routes/Api'))
 

@@ -49,7 +49,7 @@ const slggerOption = new slugger.SluggerOptions({
   slugPath: 'slug',
   generateFrom: 'title',
   index: 'slug'
-}) 
+})
 
 brandSchema.plugin(slugger.plugin, slggerOption)
 

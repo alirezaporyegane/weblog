@@ -3,7 +3,10 @@ slugger = require('mongoose-slugger-plugin'),
 Schema = mongoose.Schema,
 ObjectId = Schema.ObjectId;
 
-const categoriesSchema = new Schema({
+const productsCategoriesSchema = new Schema({
+  _id: {
+    type: String
+  },
   name: {
     type: String
   },
@@ -44,35 +47,6 @@ const categoriesSchema = new Schema({
   active: {
     type: Boolean
   }
-})
+}, { _id: false })
 
-const productsGroupsSchema = new Schema({
-  name: {
-    type: String
-  },
-  color: {
-    type: String
-  },
-  image: {
-    type: String
-  },
-  slug: {
-    type: String
-  },
-  metaTitle: {
-    type: String
-  },
-  description: {
-    type: String
-  },
-  metaDescription: {
-    type: String
-  },
-  sortOrder: {
-    type: String
-  },
-  categories: [categoriesSchema]
-})
-
-
-module.exports = mongoose.model('ProductGroups', productsGroupsSchema)
+module.exports = mongoose.model('ProductsCategories', productsCategoriesSchema)

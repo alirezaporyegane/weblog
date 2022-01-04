@@ -6,7 +6,7 @@ const Schema = mongoose.Schema;
 const userSchema = new Schema({
   userName: {
     type: String,
-    enum: [ 'root' ],
+    default: 'root',
     require: true
   },
   email: {
@@ -28,6 +28,14 @@ const userSchema = new Schema({
   active: {
     type: Boolean,
     default: false
+  },
+  confirmEmail : {
+    type: Boolean,
+    default: false
+  },
+  confirmPhoneNumber: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -35,7 +43,10 @@ userSchema.methods.generateToken = function () {
   const data = {
     _id: this._id,
     phone: this.phone,
-    role: this.role
+    email: this.email,
+    role: this.role,
+    confirmEmail: this.confirmEmail,
+    confirmPhoneNumber: this.confirmPhoneNumber
   }
 
   return jwt.sign(data, config.get('secretKey'))

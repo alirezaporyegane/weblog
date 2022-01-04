@@ -4,6 +4,7 @@ const _ = require('lodash')
 const myCache = new NodeCache({ stdTTL: 2 * 60 * 60, checkperiod: 5 * 60 });
 const Kavenegar = require('kavenegar');
 const User = require('../../models/User');
+const { sendMail } = require('../middleware/nodemail');
 const { validateUser } = require('../validator/User');
 
 class user {
@@ -16,6 +17,7 @@ class user {
 
     const phone = req.body.phone
     const password = req.body.password
+
     User.find({ phone: phone })
       .then(user => {
         if (user.length >= 1) {
@@ -134,7 +136,7 @@ class user {
         if (parseInt(newCode) === lastCode) {
           User.findById(result._id)
             .then(user => {
-                user.active = true
+                user.confirmPhoneNumber = true 
                 user.save()
                   .then(result => {
                     res.status(200).json({
@@ -151,6 +153,14 @@ class user {
         }
       })
   }
+
+  async confirmEmail (req, res) {
+    sendMail()
+  }
+
+  async statusUser (req, res) {
+    
+  } 
 }
 
 

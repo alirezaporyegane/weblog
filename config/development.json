@@ -1,4 +1,6 @@
 {
   "secretKey": "keyForWeb",
+  "userName": "RootAlireza",
+  "password": "13771377@$good",
   "MONGODB_PORT": "mongodb://127.0.0.1:27017/rest-api"
 }

@@ -43,12 +43,6 @@ const iosSplash = new Schema({
   }
 })
 
-const data = new Schema({
-  additionalProp1: [],
-  additionalProp2: [],
-  additionalProp3: []
-})
-
 const coordinates = new Schema({
   lat: {
     type: Number
@@ -59,41 +53,73 @@ const coordinates = new Schema({
   zoom: {
     type: Number
   }
-})
+}, { _id: false })
 
 const BrandingSchema = new Schema({
-    color: {
-      type: String,
-      required: true
-    },
-    name: {
-      type: String,
-      required: true
-    },
-    altName: {
-      type: String,
-      required: true
-    },
-    favicon: {
-      type: String
-    },
-    logo: {
-      type: String
-    },
-    logoAlt: {
-      type: String
-    },
-    noImage: {
-      type: String
-    },
-    adminSplash: adminSplash,
-    androidSplash: androidSplash,
-    iosSplash: iosSplash,
-    data: data,
-    coordinates: coordinates,
-    directionUrl: {
-      type: String
-    }
+  color: {
+    type: String,
+    required: true
+  },
+  name: {
+    type: String,
+    required: true
+  },
+  altName: {
+    type: String,
+    required: true
+  },
+  favicon: {
+    type: String
+  },
+  logo: {
+    type: String
+  },
+  logoAlt: {
+    type: String
+  },
+  noImage: {
+    type: String
+  },
+  adminSplash: adminSplash,
+  androidSplash: androidSplash,
+  iosSplash: iosSplash,
+  instagram: {
+    type: String,
+  },
+  youtube: {
+    type: String
+  },
+  whatsapp: {
+    type: String
+  },
+  linkedin: {
+    type: String
+  },
+  aparat: {
+    type: String
+  },
+  twitter: {
+    type: String
+  },
+  email: {
+    type: String
+  },
+  telegram: {
+    type: String,
+  },
+  phoneNumber: {
+    type: String
+  },
+  address: {
+    type: String
+  },
+  facebook: {
+    type: String
+  },
+  coordinates: coordinates,
+  directionUrl: {
+    type: String
+  }
 })
 
 module.exports = mongoose.model('Branding', BrandingSchema)

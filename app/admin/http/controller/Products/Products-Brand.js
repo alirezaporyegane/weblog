@@ -2,10 +2,12 @@ const mongoose = require('mongoose'),
 _ = require('lodash');
 
 const Brand = require('../../../models/Prodcuts/Products-Brand');
-const { brandValidator } = require('../../validator/Products/Product-Brand')
+const { brandValidator } = require('../../validator/Products/Product-Brand'),
+{ $hasModule } = require('../../middleware/modules');
+
 
 class brand {
-  async getAll (req, res) {
+  async getAll (req, res, next) {
     const skip = req.query.skip ? parseInt(req.query.skip) : ''
     const limit = req.query.limit ? parseInt(req.query.limit) : ''
     const include = req.query.include ? req.query.include : ''
@@ -69,11 +71,6 @@ class brand {
   async getById (req, res) {
     const id = req.params.id
 
-    if (!id) return res.status(400).json({
-      msg: 'Bad Request',
-      code: 400
-    })
-
     if (!mongoose.isValidObjectId(id))
       return res.status(400).json({
         msg: 'Bad Request',
@@ -94,7 +91,7 @@ class brand {
   }
 
   async create (req, res) {
-    const error = brandValidator(req.body)
+    const { error } = brandValidator(req.body)
     if (error) return res.status(400).json({
       msg: 'Bad Request',
       code: 400
@@ -120,18 +117,13 @@ class brand {
   async update (req, res) {
     const id = req.params.id
 
-    if (!id) return res.status(400).json({
-      msg: 'Bad Request',
-      code: 400
-    })
-
     if (!mongoose.isValidObjectId(id))
       return res.status(400).json({
         msg: 'Bad Request',
         code: 400
       })
 
-    const error = brandValidator(req.body)
+    const { error } = brandValidator(req.body)
     if (error) return res.status(400).json({
       msg: 'Bad Request',
       code: 400
