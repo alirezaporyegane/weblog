@@ -1,7 +1,14 @@
 const express = require('express'),
-router = express.Router(),
-{ authUsre, admin } = require('../../http/middleware/check-auth'),
-{ getAll, getCount, getById, create, update, remove } = require('../../http/controller/Post/Posts');
+  router = express.Router(),
+  { authUsre, admin } = require('../../http/middleware/check-auth'),
+  {
+    getAll,
+    getCount,
+    getById,
+    create,
+    update,
+    remove,
+  } = require('../../http/controller/Post/Posts')
 
 router.get('/', [authUsre, admin], getAll)
 router.get('/count', [authUsre, admin], getCount)

@@ -1,78 +1,87 @@
 const mongoose = require('mongoose'),
-slugger = require('mongoose-slugger-plugin'),
-Schema = mongoose.Schema,
-ObjectId = Schema.ObjectId;
+  slugger = require('mongoose-slugger-plugin'),
+  Schema = mongoose.Schema,
+  ObjectId = Schema.ObjectId
 
 const categoriesSchema = new Schema({
+  _id: {
+    type: String,
+    required: true,
+  },
   name: {
-    type: String
+    type: String,
   },
   slug: {
-    type: String
+    type: String,
   },
   image: {
-    type: String
+    type: String,
   },
   sortOrder: {
-    type: String
+    type: Number,
   },
   metaTitle: {
-    type: String
+    type: String,
   },
   description: {
-    type: String
+    type: String,
   },
   metaDescription: {
-    type: String
+    type: String,
   },
   parentId: {
-    type: String
+    type: String,
   },
   altName: {
-    type: String
+    type: String,
   },
   tags: {
-    type: [String]
+    type: [String],
   },
   otherNames: {
-    type: [String]
+    type: [String],
   },
-  productType: {
+  typeId: {
     type: ObjectId,
-    ref: 'ProductSetType'
+    ref: 'ProductSetType',
   },
   active: {
-    type: Boolean
-  }
+    type: Boolean,
+  },
+  groupId: {
+    type: ObjectId,
+    ref: 'ProductGroups',
+  },
 })
 
 const productsGroupsSchema = new Schema({
   name: {
-    type: String
+    type: String,
+    required: true,
   },
   color: {
-    type: String
+    type: String,
   },
   image: {
-    type: String
+    type: String,
   },
   slug: {
-    type: String
+    type: String,
+    required: true,
   },
   metaTitle: {
-    type: String
+    type: String,
   },
   description: {
-    type: String
+    type: String,
   },
   metaDescription: {
-    type: String
+    type: String,
   },
   sortOrder: {
-    type: String
+    type: Number,
   },
-  categories: [categoriesSchema]
+  categories: [categoriesSchema],
 })
-
 
 module.exports = mongoose.model('ProductGroups', productsGroupsSchema)

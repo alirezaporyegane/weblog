@@ -1,47 +1,47 @@
 const mongoose = require('mongoose'),
-Schema = mongoose.Schema;
+  Schema = mongoose.Schema
 
 const menuSchema = new Schema({
   _id: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
   title: {
     type: String,
     max: 250,
-    min: 3
+    min: 3,
   },
   url: {
-    type: String
+    type: String,
   },
   target: {
-    type: String
+    type: String,
   },
   icon: {
-    type: String
+    type: String,
   },
   viewData: {
-    type: String
+    type: String,
   },
   parentId: {
     type: String,
   },
   components: {
-    type: String
+    type: String,
   },
   sortOrder: {
-    type: Number
+    type: Number,
   },
   availability: {
-    type: Number
-  }
+    type: Number,
+  },
 })
 
 if (mongoose.models.Menu) {
-  Menu = mongoose.model('Menu');
+  Menu = mongoose.model('Menu')
 } else {
-  Menu = mongoose.model('Menu', menuSchema);
+  Menu = mongoose.model('Menu', menuSchema)
 }
 
 module.exports = Menu

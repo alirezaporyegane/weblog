@@ -1,7 +1,14 @@
 const express = require('express'),
-router = express.Router(),
-{ getAll, getById, getCount, create, update, remove } = require('../http/controller/DeliveryMethods'),
-{ authUsre, admin } = require('../http/middleware/check-auth')
+  router = express.Router(),
+  {
+    getAll,
+    getById,
+    getCount,
+    create,
+    update,
+    remove,
+  } = require('../http/controller/DeliveryMethods'),
+  { authUsre, admin } = require('../http/middleware/check-auth')
 
 router.get('/', [authUsre, admin], getAll)
 router.get('/count', [authUsre, admin], getCount)

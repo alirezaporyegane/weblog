@@ -1,19 +1,19 @@
-const { widgetName } = require('../../models/widgets/WidgetName');
-const WidgetModel = require('../../models/widgets/Widgets');
+const { widgetName } = require('../../models/widgets/WidgetName')
+const WidgetModel = require('../../models/widgets/Widgets')
 
 class WidgetArea {
-  async getName (req, res) {
+  async getName(req, res) {
     try {
       res.status(200).json(widgetName)
     } catch (err) {
       res.status(500).json({
         msg: 'Internal Server Error',
-        code: 500
+        code: 500,
       })
     }
   }
 
-  async getById (req, res) {
+  async getById(req, res) {
     const id = req.params.id
 
     const result = await WidgetModel.findOne({ _id: id })
@@ -23,12 +23,12 @@ class WidgetArea {
     } catch (err) {
       res.status(500).json({
         msg: 'Internal Server Error',
-        code: 500
+        code: 500,
       })
     }
   }
 
-  async UpdateById (req, res) {
+  async UpdateById(req, res) {
     const id = req.params.id
 
     try {
@@ -44,10 +44,10 @@ class WidgetArea {
         res.status(200).json(result)
       }
     } catch (err) {
-      console.log(err);
+      console.log(err)
       res.status(500).json({
         msg: 'Internal Server Error',
-        code: 500
+        code: 500,
       })
     }
   }

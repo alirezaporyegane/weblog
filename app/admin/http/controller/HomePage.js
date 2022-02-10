@@ -1,22 +1,22 @@
 const _ = require('lodash'),
-HomePage = require('../../models/Pages'),
-Post = require('../../models/Post/Posts');
+  HomePage = require('../../models/Pages'),
+  Post = require('../../models/Post/Posts')
 
 class pagescontroller {
-  async getHomePage (req, res) {
+  async getHomePage(req, res) {
     HomePage.findOne()
-      .then(result => {
+      .then((result) => {
         let data = {}
 
         if (result.area1) {
           result.area1.forEach(async (area) => {
-            if (area.type === "post") {
+            if (area.type === 'post') {
               const post = await Post.find()
               area.items = post
 
-              console.log(area);
+              console.log(area)
 
-              data = { ... area }
+              data = { ...area }
             }
             data = { ...area }
           })
@@ -24,25 +24,25 @@ class pagescontroller {
 
         res.status(200).json(data)
       })
-      .catch(err => {
+      .catch((err) => {
         res.status(500).json({
           msg: 'Get has Failed',
           error: err,
-          success: false
+          success: false,
         })
       })
   }
 
-  async updateHomePage (req, res) {
+  async updateHomePage(req, res) {
     try {
       const haveHomePage = await HomePage.find()
 
       if (haveHomePage.length === 0) {
         const result = await HomePage.create(req.body)
 
-        console.log(result);
+        console.log(result)
 
-        res.status(200).json("ok")
+        res.status(200).json('ok')
         // switch (result.type) {
         //   case value:
 
@@ -52,12 +52,11 @@ class pagescontroller {
         //     break;
         // }
       } else {
-
       }
     } catch (err) {
       res.status(500).json({
         msg: 'Internal Server Error',
-        code: 500
+        code: 500,
       })
     }
   }

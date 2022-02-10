@@ -1,29 +1,29 @@
-const PostCategoriesModel = require('../../../models/Post/Post-Categories');
+const PostCategoriesModel = require('../../../models/Post/Post-Categories')
 
 class PostCategories {
-  async getAll (req, res) {
+  async getAll(req, res) {
     PostCategoriesModel.find()
-    .sort({ sortOrder: 1 })
-      .then(result => {
+      .sort({ sortOrder: 1 })
+      .then((result) => {
         res.status(200).json(result)
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err)
         res.status(500).json({
           msg: 'Internal Server Error',
-          code: 500
+          code: 500,
         })
       })
   }
 
-  async update (req, res) {
+  async update(req, res) {
     PostCategoriesModel.find()
-      .then(data => {
+      .then((data) => {
         if (data.length > 0) {
           PostCategoriesModel.deleteMany({})
             .then(() => {
               PostCategoriesModel.insertMany(req.body)
-                .then(result => {
+                .then((result) => {
                   res.status(200).json(result)
                 })
                 .catch(() => {
@@ -41,10 +41,11 @@ class PostCategories {
             })
         } else {
           PostCategoriesModel.insertMany(req.body)
-            .then(result => {
+            .then((result) => {
               res.status(200).json(result)
             })
-            .catch(() => {
+            .catch((err) => {
+              console.log(err)
               res.status(500).json({
                 msg: 'Internal Server Error',
                 code: 500,
@@ -52,7 +53,8 @@ class PostCategories {
             })
         }
       })
-      .catch(() => {
+      .catch((err) => {
+        console.log(err)
         res.status(500).json({
           msg: 'Internal Server Error',
           code: 500,
@@ -62,4 +64,3 @@ class PostCategories {
 }
 
 module.exports = new PostCategories()
-

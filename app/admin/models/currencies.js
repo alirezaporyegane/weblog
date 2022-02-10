@@ -1,34 +1,34 @@
 const mongoose = require('mongoose'),
-Schema = mongoose.Schema;
+  Schema = mongoose.Schema
 
 const currenciesSchema = new Schema({
   id: {
     type: String,
-    required: true
+    required: true,
   },
   name: {
     type: String,
-    required: true
+    required: true,
   },
   rate: {
     type: Number,
-    required: true
+    required: true,
   },
   symbol: {
-    type: String
+    type: String,
   },
   image: {
-    type: String
+    type: String,
   },
   precision: {
-    type: Number
+    type: Number,
   },
   sortOrder: {
-    type: Number
+    type: Number,
   },
   active: {
-    type: Boolean
-  }
+    type: Boolean,
+  },
 })
 
 module.exports = mongoose.model('Currencies', currenciesSchema)

@@ -1,18 +1,18 @@
 const mongoose = require('mongoose'),
-Schema = mongoose.Schema;
+  Schema = mongoose.Schema
 
 const productRelationTypesSchema = new Schema({
   primarySideName: {
     type: String,
-    required: true
+    required: true,
   },
   relatedSideName: {
     type: String,
-    required: true
+    required: true,
   },
   sortOrder: {
-    type: Number
-  }
+    type: Number,
+  },
 })
 
 module.exports = mongoose.model('ProductRelationTypes', productRelationTypesSchema)

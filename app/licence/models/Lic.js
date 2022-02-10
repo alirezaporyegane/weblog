@@ -82,7 +82,7 @@ const modules = [
   'exportExcel_customers',
   'initialCredit',
   'cart_settings',
-  'giftCredit'
+  'giftCredit',
 ]
 
 module.exports = { modules }

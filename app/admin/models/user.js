@@ -1,42 +1,42 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 const jwt = require('jsonwebtoken')
 const config = require('config')
-const Schema = mongoose.Schema;
+const Schema = mongoose.Schema
 
 const userSchema = new Schema({
   userName: {
     type: String,
     default: 'root',
-    require: true
+    require: true,
   },
   email: {
     type: String,
-    require: true
+    require: true,
   },
   phone: {
     type: String,
-    required: true
+    required: true,
   },
   password: {
     type: String,
-    required: true
+    required: true,
   },
   role: {
     type: String,
-    default: 'User'
+    default: 'User',
   },
   active: {
     type: Boolean,
-    default: false
+    default: false,
   },
-  confirmEmail : {
+  confirmEmail: {
     type: Boolean,
-    default: false
+    default: false,
   },
   confirmPhoneNumber: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 })
 
 userSchema.methods.generateToken = function () {
@@ -46,7 +46,7 @@ userSchema.methods.generateToken = function () {
     email: this.email,
     role: this.role,
     confirmEmail: this.confirmEmail,
-    confirmPhoneNumber: this.confirmPhoneNumber
+    confirmPhoneNumber: this.confirmPhoneNumber,
   }
 
   return jwt.sign(data, config.get('secretKey'))

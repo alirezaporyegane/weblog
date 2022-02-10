@@ -1,9 +1,9 @@
 const _ = require('lodash'),
-mongoose = require('mongoose');
-Pages = require('../../../models/Pages/Pages');
+  mongoose = require('mongoose')
+Pages = require('../../../models/Pages/Pages')
 
 class pagescontroller {
-  async getAll (req, res) {
+  async getAll(req, res) {
     const skip = req.query.skip ? parseInt(req.query.skip) : ''
     const limit = req.query.limit ? parseInt(req.query.limit) : ''
     const include = req.query.include ? req.query.include : ''
@@ -12,9 +12,7 @@ class pagescontroller {
     const Sort = req.query.sort ? eval(`({${req.query.sort}})`) : ''
 
     try {
-      const result = await Pages.find(
-        { slug: { $regex: slug }, title: { $regex: name } }
-      )
+      const result = await Pages.find({ slug: { $regex: slug }, title: { $regex: name } })
         .skip(skip)
         .limit(limit)
         .sort(Sort)
@@ -25,36 +23,37 @@ class pagescontroller {
     } catch (err) {
       res.status(500).json({
         msg: 'Internal Server Error',
-        code: 500
+        code: 500,
       })
     }
   }
 
-  async getCount (req, res) {
+  async getCount(req, res) {
     const name = req.query.name ? req.query.name : ''
     const slug = req.query.slug ? req.query.slug : ''
 
     try {
-      const result = await Pages.find(
-        { slug: { $regex: slug }, title: { $regex: name } }
-      ).countDocuments()
+      const result = await Pages.find({
+        slug: { $regex: slug },
+        title: { $regex: name },
+      }).countDocuments()
 
       res.status(200).json(result)
     } catch (err) {
       res.status(500).json({
         msg: 'Internal Server Error',
-        code: 500
+        code: 500,
       })
     }
   }
 
-  async getById (req, res) {
+  async getById(req, res) {
     const id = req.params.id
 
     if (!mongoose.isValidObjectId(id))
       return res.status(400).json({
         msg: 'Bad Request',
-        code: 400
+        code: 400,
       })
 
     try {
@@ -64,12 +63,12 @@ class pagescontroller {
     } catch (err) {
       res.status(500).json({
         msg: 'Internal Server Error',
-        code: 500
+        code: 500,
       })
     }
   }
 
-  async create (req, res) {
+  async create(req, res) {
     try {
       const result = await Pages.create(req.body)
 
@@ -77,18 +76,18 @@ class pagescontroller {
     } catch (err) {
       res.status(500).json({
         msg: 'Internal Server Error',
-        code: 500
+        code: 500,
       })
     }
   }
 
-  async update (req, res) {
+  async update(req, res) {
     const id = req.params.id
 
     if (!mongoose.isValidObjectId(id))
       return res.status(400).json({
         msg: 'Bad Request',
-        code: 400
+        code: 400,
       })
 
     try {
@@ -98,28 +97,28 @@ class pagescontroller {
     } catch (err) {
       res.status(500).json({
         msg: 'Internal Server Error',
-        code: 500
+        code: 500,
       })
     }
   }
 
-  async remove (req, res) {
+  async remove(req, res) {
     const id = req.params.id
 
     if (!mongoose.isValidObjectId(id))
       return res.status(400).json({
         msg: 'Bad Request',
-        code: 400
+        code: 400,
       })
 
     try {
       await Pages.remove({ _id: id })
 
-      res.status(200).json("success")
+      res.status(200).json('success')
     } catch (er) {
       res.status(500).json({
         msg: 'Internal Server Error',
-        code: 500
+        code: 500,
       })
     }
   }

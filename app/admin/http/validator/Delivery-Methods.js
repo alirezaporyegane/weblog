@@ -1,6 +1,6 @@
-const joi = require('joi');
+const joi = require('joi')
 
-function validateDeliveryMethods (data) {
+function validateDeliveryMethods(data) {
   const Schema = joi.object({
     name: joi.string().max(150).required(),
     description: joi.string().allow(null),
@@ -12,12 +12,12 @@ function validateDeliveryMethods (data) {
     rangesFeeType: joi.number().integer(),
     calculationMethod: joi.number().integer(),
     baseFee: joi.number(),
-    ranges: joi.array().items(joi.any().required())
+    ranges: joi.array().items(joi.any().required()),
   })
 
-  return Schema.validate(data);
+  return Schema.validate(data)
 }
 
 module.exports = {
-  validateDeliveryMethods
+  validateDeliveryMethods,
 }

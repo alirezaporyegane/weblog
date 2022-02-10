@@ -1,69 +1,67 @@
 const mongoose = require('mongoose'),
-slugger = require('mongoose-slugger-plugin'),
-Schema = mongoose.Schema,
-ObjectId = Schema.ObjectId;
+  slugger = require('mongoose-slugger-plugin'),
+  Schema = mongoose.Schema,
+  ObjectId = Schema.ObjectId
+
+const commentsSchema = new Schema({})
 
 const postsSchema = new Schema({
   title: {
     type: String,
-    required: true
+    required: true,
   },
   slug: {
     type: String,
-    unique: true
+    unique: true,
   },
   image: {
-    type: String
+    type: String,
   },
   header: {
-    type: String
+    type: String,
   },
   excerpt: {
-    type: String
+    type: String,
   },
   lead: {
-    type: String
+    type: String,
   },
   body: {
-    type: String
+    type: String,
   },
   metaTitle: {
-    type: String
+    type: String,
   },
   metaDescription: {
-    type: String
+    type: String,
   },
   featured: {
-    type: Boolean
+    type: Boolean,
   },
   primaryCategoryId: {
     type: ObjectId,
     ref: 'PostCategories',
-    required: true
+    required: true,
   },
-  categoryIds: [{
-    type: ObjectId,
-    ref: 'PostCategories'
-  }],
   published: {
     type: String,
-    default: new Date()
-  }
+    default: new Date(),
+  },
+  comments: [commentsSchema],
 })
 
-postsSchema.index({ slug: 1}, { name: 'slug', unique: true })
-
+postsSchema.index({ slug: 1 }, { name: 'slug', unique: true })
 
 const sluggerOptions = new slugger.SluggerOptions({
   slugPath: 'slug',
   generateFrom: 'title',
-  index: 'slug'
+  index: 'slug',
 })
 
 postsSchema.plugin(slugger.plugin, sluggerOptions)
 
 let Posts = mongoose.model('Posts', postsSchema)
 
-Posts = slugger.wrap(Posts);
+Posts = slugger.wrap(Posts)
 
 module.exports = Posts

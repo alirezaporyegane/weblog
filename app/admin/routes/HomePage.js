@@ -1,7 +1,7 @@
 const express = require('express'),
-router = express.Router(),
-{ authUsre, admin } = require('../http/middleware/check-auth'),
-{ getHomePage, updateHomePage } = require('../http/controller/HomePage')
+  router = express.Router(),
+  { authUsre, admin } = require('../http/middleware/check-auth'),
+  { getHomePage, updateHomePage } = require('../http/controller/HomePage')
 
 router.get('/', [authUsre, admin], getHomePage)
 router.put('/', [authUsre, admin], updateHomePage)

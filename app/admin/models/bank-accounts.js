@@ -1,38 +1,38 @@
 const mongoose = require('mongoose'),
-Schema = mongoose.Schema,
-ObjectId = Schema.ObjectId;
+  Schema = mongoose.Schema,
+  ObjectId = Schema.ObjectId
 
 const bankAccountsSchema = new Schema({
   name: {
     type: String,
-    required: true
+    required: true,
   },
   owner: {
     type: String,
-    required: true
+    required: true,
   },
   bankId: {
     type: ObjectId,
-    ref: 'Banks'
+    ref: 'Banks',
   },
   branchCode: {
-    type: String
+    type: String,
   },
   branchName: {
-    type: String
+    type: String,
   },
   accountNo: {
-    type: String
+    type: String,
   },
   sheba: {
-    type: String
+    type: String,
   },
   cardNo: {
-    type: String
+    type: String,
   },
   sortOrder: {
-    type: Number
-  }
+    type: Number,
+  },
 })
 
 module.exports = mongoose.model('BankAccounts', bankAccountsSchema)

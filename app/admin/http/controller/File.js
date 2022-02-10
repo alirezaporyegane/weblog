@@ -1,53 +1,57 @@
-const File = require('../../models/Files');
+const File = require('../../models/Files')
 
 class FileController {
-  async create (req, res) {
+  async create(req, res) {
     const file = new File({
-      image: req.file.path.slice(7)
+      image: req.file.path.slice(7),
     })
 
-    file.save()
-      .then(result => {
+    file
+      .save()
+      .then((result) => {
         res.status(200).json(result)
       })
-      .catch(err => {
+      .catch((err) => {
         res.status(500).json({
-          error: err
+          error: err,
         })
       })
   }
 
-  async update (req, res) {
+  async update(req, res) {
     const filename = req.params.filename
     console.log(filename)
 
-    File.findOneAndUpdate({ image : filename}, {
-      image: req.file.path
-    }, { new: true })
-    .then(result => {
-      res.status(200).json(result)
-    })
-    .catch(err => {
-      res.status(500).json({
-        error: err
+    File.findOneAndUpdate(
+      { image: filename },
+      {
+        image: req.file.path,
+      },
+      { new: true }
+    )
+      .then((result) => {
+        res.status(200).json(result)
       })
-    })
+      .catch((err) => {
+        res.status(500).json({
+          error: err,
+        })
+      })
   }
 
   async remove(req, res) {
     const filename = req.params.filename
 
-    File.remove({ image : filename })
+    File.remove({ image: filename })
       .then(() => {
         res.status(200).json(true)
       })
-      .catch(err => {
+      .catch((err) => {
         res.status(500).json({
-          error: err
+          error: err,
         })
       })
   }
 }
-
 
 module.exports = new FileController()

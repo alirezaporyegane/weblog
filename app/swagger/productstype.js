@@ -5,7 +5,6 @@
  *    description: The ProductsType Managing API
  */
 
-
 /**
  * @swagger
  *     components:
@@ -16,7 +15,6 @@
  *            example: "abcABC123"
  *            name: x-auth-token
  */
-
 
 /**
  * @swagger
@@ -76,7 +74,6 @@
  *            example: true
  */
 
-
 /**
  * @swagger
  * components:
@@ -102,7 +99,6 @@
  *            example: true
  */
 
-
 /**
  * @swagger
  * components:
@@ -122,8 +118,6 @@
  *            $ref: '#/components/schemas/fieldTypesSchema'
  */
 
-
-
 /**
  * @swagger
  * components:
@@ -140,7 +134,7 @@
  *        displayName:
  *          type: string
  *        type:
- *          type: integer
+ *          type: string
  *        viewData:
  *          type: string
  *        required:
@@ -152,7 +146,6 @@
  *        fieldTypeOn:
  *           type: integer
  */
-
 
 /**
  * @swagger
@@ -279,7 +272,6 @@
  *            type: string
  */
 
-
 /**
  * @swagger
  * /api/admin/product-set-type:
@@ -345,8 +337,6 @@
  *                $ref: '#/components/schemas/ProductsType'
  */
 
-
-
 /**
  * @swagger
  * /api/admin/product-set-type/info:
@@ -385,9 +375,6 @@
  *              items:
  *                $ref: '#/components/schemas/infoSchema'
  */
-
-
-
 
 /**
  * @swagger

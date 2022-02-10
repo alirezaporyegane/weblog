@@ -1,22 +1,21 @@
 const _ = require('lodash'),
-HomePage = require('../../../models/Pages/Home-Page');
-
+  HomePage = require('../../../models/Pages/Home-Page')
 
 class HomePagecontroller {
-  async getHomePage (req, res) {
+  async getHomePage(req, res) {
     try {
       const result = await HomePage.findOne()
 
-        res.status(200).json(result)
+      res.status(200).json(result)
     } catch (err) {
       res.status(500).json({
         msg: 'Internal Server Error',
-        code: 500
+        code: 500,
       })
     }
   }
 
-  async updateHomePage (req, res) {
+  async updateHomePage(req, res) {
     try {
       const haveHomePage = await HomePage.find()
 
@@ -32,10 +31,10 @@ class HomePagecontroller {
         res.status(200).json(result)
       }
     } catch (err) {
-      console.log(err);
+      console.log(err)
       res.status(500).json({
         msg: 'Internal Server Error',
-        code: 500
+        code: 500,
       })
     }
   }

@@ -1,8 +1,8 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
 const modulesSchema = new Schema({
-  modules: [String]
+  modules: [String],
 })
 
 module.exports = mongoose.model('Modules', modulesSchema)

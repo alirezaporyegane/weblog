@@ -1,7 +1,17 @@
 const express = require('express'),
-router = express.Router(),
-{ getAll, getInfo, getCount, getById, create, update, remove, getBaseCurrency, updateBaseCurrency } = require('../http/controller/Currencies'),
-{ authUsre, admin } = require('../http/middleware/check-auth')
+  router = express.Router(),
+  {
+    getAll,
+    getInfo,
+    getCount,
+    getById,
+    create,
+    update,
+    remove,
+    getBaseCurrency,
+    updateBaseCurrency,
+  } = require('../http/controller/Currencies'),
+  { authUsre, admin } = require('../http/middleware/check-auth')
 
 router.get('/', [authUsre, admin], getAll)
 router.get('/info', [authUsre, admin], getInfo)

@@ -1,7 +1,7 @@
 const express = require('express'),
-{ register, login, sendCode, getCode, statusUser } = require('../http/controller/User'),
-router =  express.Router(),
-{ authUsre } = require('../http/middleware/check-auth')
+  { register, login, sendCode, getCode, statusUser } = require('../http/controller/User'),
+  router = express.Router(),
+  { authUsre } = require('../http/middleware/check-auth')
 
 router.post('/register', register)
 router.post('/login', login)

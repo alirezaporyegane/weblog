@@ -1,6 +1,6 @@
-const joi = require('joi');
+const joi = require('joi')
 
-function validateUser (data) {
+function validateUser(data) {
   const Schema = joi.object({
     userName: joi.string(),
     phone: joi.string().length(11).required(),
@@ -10,6 +10,6 @@ function validateUser (data) {
   Schema.validate(data)
 }
 
-module.exports = { 
-  validateUser
+module.exports = {
+  validateUser,
 }

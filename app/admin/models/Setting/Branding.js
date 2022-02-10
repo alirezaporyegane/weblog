@@ -1,84 +1,87 @@
 const mongoose = require('mongoose'),
-Schema = mongoose.Schema;
+  Schema = mongoose.Schema
 
 const slides = new Schema({
-    title: {
-      type: String
-    },
-    description: {
-      type: String
-    },
-    background: {
-      type: String
-    }
+  title: {
+    type: String,
+  },
+  description: {
+    type: String,
+  },
+  background: {
+    type: String,
+  },
 })
 
 const adminSplash = new Schema({
-    slides: [slides],
-    buttonLabel: {
-      type: String
-    },
-    active: {
-      type: Boolean
-    }
+  slides: [slides],
+  buttonLabel: {
+    type: String,
+  },
+  active: {
+    type: Boolean,
+  },
 })
 
 const androidSplash = new Schema({
   slides: [slides],
   buttonLabel: {
-    type: String
+    type: String,
   },
   active: {
-    type: Boolean
-  }
+    type: Boolean,
+  },
 })
 
 const iosSplash = new Schema({
   slides: [slides],
   buttonLabel: {
-    type: String
+    type: String,
   },
   active: {
-    type: Boolean
-  }
+    type: Boolean,
+  },
 })
 
-const coordinates = new Schema({
-  lat: {
-    type: Number
+const coordinates = new Schema(
+  {
+    lat: {
+      type: Number,
+    },
+    lon: {
+      type: Number,
+    },
+    zoom: {
+      type: Number,
+    },
   },
-  lon: {
-    type: Number
-  },
-  zoom: {
-    type: Number
-  }
-}, { _id: false })
+  { _id: false }
+)
 
 const BrandingSchema = new Schema({
   color: {
     type: String,
-    required: true
+    required: true,
   },
   name: {
     type: String,
-    required: true
+    required: true,
   },
   altName: {
     type: String,
-    required: true
+    required: true,
   },
   favicon: {
-    type: String
+    type: String,
   },
   logo: {
-    type: String
+    type: String,
   },
   logoAlt: {
-    type: String
+    type: String,
   },
   noImage: {
-    type: String
+    type: String,
   },
   adminSplash: adminSplash,
   androidSplash: androidSplash,
@@ -87,39 +90,39 @@ const BrandingSchema = new Schema({
     type: String,
   },
   youtube: {
-    type: String
+    type: String,
   },
   whatsapp: {
-    type: String
+    type: String,
   },
   linkedin: {
-    type: String
+    type: String,
   },
   aparat: {
-    type: String
+    type: String,
   },
   twitter: {
-    type: String
+    type: String,
   },
   email: {
-    type: String
+    type: String,
   },
   telegram: {
     type: String,
   },
   phoneNumber: {
-    type: String
+    type: String,
   },
   address: {
-    type: String
+    type: String,
   },
   facebook: {
-    type: String
+    type: String,
   },
   coordinates: coordinates,
   directionUrl: {
-    type: String
-  }
+    type: String,
+  },
 })
 
 module.exports = mongoose.model('Branding', BrandingSchema)

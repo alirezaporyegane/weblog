@@ -1,12 +1,12 @@
 const widgetName = [
   {
     id: 'topBar',
-    name: 'topBar'
+    name: 'topBar',
   },
   {
     id: 'webFooter',
-    name: 'webFooter'
-  }
+    name: 'webFooter',
+  },
 ]
 
 module.exports = { widgetName }

@@ -1,8 +1,16 @@
 const express = require('express'),
-router = express.Router(),
-{ getAll, getInfo, getCount, getById, create, update, remove } = require('../../http/controller/Products/Products-Unit'),
-{ authUsre, admin } = require('../../http/middleware/check-auth'),
-{ hasModule } = require('../../http/middleware/modules');
+  router = express.Router(),
+  {
+    getAll,
+    getInfo,
+    getCount,
+    getById,
+    create,
+    update,
+    remove,
+  } = require('../../http/controller/Products/Products-Unit'),
+  { authUsre, admin } = require('../../http/middleware/check-auth'),
+  { hasModule } = require('../../http/middleware/modules')
 
 // PRODUCTS UNIT
 router.get('/', [authUsre, admin, hasModule(['units'])], getAll)
@@ -13,6 +21,4 @@ router.post('/', [authUsre, admin, hasModule(['units'])], create)
 router.put('/:id', [authUsre, admin, hasModule(['units'])], update)
 router.delete('/:id', [authUsre, admin, hasModule(['units'])], remove)
 
-
 module.exports = router
-

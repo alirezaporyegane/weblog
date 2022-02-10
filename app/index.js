@@ -1,17 +1,17 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
-const winston = require('winston');
-const swaggerUI = require('swagger-ui-express');
-const swaggerJsDoc = require('swagger-jsdoc');
-const morgan = require('morgan');
-require('express-async-errors');
-require('winston-mongodb');
-const app = express();
-const config = require('config');
+const express = require('express')
+const bodyParser = require('body-parser')
+const mongoose = require('mongoose')
+const winston = require('winston')
+const swaggerUI = require('swagger-ui-express')
+const swaggerJsDoc = require('swagger-jsdoc')
+const morgan = require('morgan')
+require('express-async-errors')
+require('winston-mongodb')
+const app = express()
+const config = require('config')
 
 class Application {
-  constructor () {
+  constructor() {
     this.setupSwagger()
     this.setupMongodb()
     this.setupMiddleware()
@@ -20,22 +20,23 @@ class Application {
     this.setupAddress()
   }
 
-  setupSwagger () {
+  setupSwagger() {
     const options = {
       definition: {
-        openapi: "3.0.0",
+        openapi: '3.0.0',
+        layout: 'BaseLayout',
         info: {
-          title: "Library API",
-          version: "1.0.0",
-          description: "A Express Library API"
+          title: 'Library API',
+          version: '1.0.0',
+          description: 'A Express Library API',
         },
         servers: [
           {
-            url: "http://localhost:4000",
-          }
-        ]
+            url: 'http://localhost:4000',
+          },
+        ],
       },
-      apis: ["./app/swagger/*.js"]
+      apis: ['./app/swagger/*.js'],
     }
 
     var cssOptions = {
@@ -47,39 +48,40 @@ class Application {
       .swagger-ui .model-box-control:focus { outline: unset; }
       .swagger-ui table { margin-top: 5px }
       .swagger-ui table.model tbody tr td:first-of-type { padding: 0 0 3px 4em }
-      .swagger-ui .copy-to-clipboard button { padding-left: 30px }`
-    };
+      .swagger-ui .copy-to-clipboard button { padding-left: 30px }`,
+    }
 
     const specs = swaggerJsDoc(options)
 
     app.use('/docs', swaggerUI.serve, swaggerUI.setup(specs, cssOptions))
   }
 
-  setupMongodb () {
-      mongoose.connect(config.get("MONGODB_PORT"), {
+  setupMongodb() {
+    mongoose
+      .connect(config.get('MONGODB_PORT'), {
         useFindAndModify: true,
-        useUnifiedTopology: true
+        useUnifiedTopology: true,
       })
-        .then(() => {
-          console.log("Db is Connect")
-        })
-        .catch(() => {
-          console.log("Db is not Connect");
-        })
+      .then(() => {
+        console.log('Db is Connect')
+      })
+      .catch(() => {
+        console.log('Db is not Connect')
+      })
   }
 
-  setupAddress () {
+  setupAddress() {
     const port = process.env.port || 4000
     app.listen(port, (err) => {
       if (err) {
         return console.log(err)
       }
-      console.log(config.get("MONGODB_PORT"));
+      console.log(config.get('MONGODB_PORT'))
       return console.log(`Server Listen in ${process.env.NODE_ENV} on Port ${port}`)
-    });
+    })
   }
 
-  setupRoutes () {
+  setupRoutes() {
     app.use('/api', require('./licence/routes/Api'))
     app.use('/api/admin', require('./admin/routes/Api'))
     app.use('/api/public', require('./general/routes/Api'))
@@ -87,12 +89,12 @@ class Application {
     app.use((req, res, next) => {
       res.status(404).json({
         msg: 'Not Found',
-        code: 404
+        code: 404,
       })
-    });
+    })
   }
 
-  setupMiddleware () {
+  setupMiddleware() {
     app.use((req, res, next) => {
       res.header('Access-Control-Allow-Origin', '*')
       res.header('Access-Control-Allow-Headers', '*')
@@ -101,32 +103,33 @@ class Application {
         return res.status(200).json()
       }
       next()
-    });
+    })
 
-    app.use(bodyParser.urlencoded({ extended: true }));
+    app.use(bodyParser.urlencoded({ extended: true }))
     app.use(bodyParser.json())
     app.use(express.static('public'))
     if (process.env.NODE_ENV === 'development') {
-      app.use(morgan("dev"))
+      app.use(morgan('dev'))
     }
-
   }
 
-  setupError () {
+  setupError() {
     const error = require('./admin/http/middleware/error')
 
-    winston.add(new winston.transports.File({filename: 'error-log.log'}))
-    winston.add(new winston.transports.MongoDB({
-      db: config.get("MONGODB_PORT"),
-      level: 'error'
-    }))
+    winston.add(new winston.transports.File({ filename: 'error-log.log' }))
+    winston.add(
+      new winston.transports.MongoDB({
+        db: config.get('MONGODB_PORT'),
+        level: 'error',
+      })
+    )
 
-    process.on('rejectionHandled',(err) => {
+    process.on('rejectionHandled', (err) => {
       console.log(err)
       winston.error(err)
     })
 
-    process.on("uncaughtException", (err) => {
+    process.on('uncaughtException', (err) => {
       console.log(err)
       winston.error(err)
     })
@@ -134,8 +137,5 @@ class Application {
     app.use(error)
   }
 }
-
-
-
 
 module.exports = Application

@@ -1,6 +1,6 @@
-const joi = require('joi');
+const joi = require('joi')
 
-function ValidatorCurrencies (data) {
+function ValidatorCurrencies(data) {
   const Schema = joi.object({
     id: joi.string().required(),
     name: joi.string().max(150).required(),
@@ -9,12 +9,11 @@ function ValidatorCurrencies (data) {
     image: joi.string().allow(null),
     precision: joi.number().integer().max(10).min(0),
     sortOrder: joi.number().integer(),
-    active: joi.boolean()
-  });
+    active: joi.boolean(),
+  })
   return Schema.validate(data)
-};
-
-module.exports = {
-  ValidatorCurrencies
 }
 
+module.exports = {
+  ValidatorCurrencies,
+}

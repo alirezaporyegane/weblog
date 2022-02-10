@@ -1,4 +1,4 @@
-  /**
+/**
  * @swagger
  * components:
  *   schemas:
@@ -33,7 +33,7 @@
  *         active: true
  */
 
-  /**
+/**
  * @swagger
  * tags:
  *    name: Banks
@@ -41,7 +41,6 @@
  *    security:
  *      - BasicAuth: []
  */
-
 
 /** @swagger
  * /api/admin/banks:

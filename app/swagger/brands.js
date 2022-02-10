@@ -5,7 +5,6 @@
  *    description: The Brand Managing API
  */
 
-
 /**
  * @swagger
  *     components:
@@ -16,7 +15,6 @@
  *            example: "abcABC123"
  *            name: x-auth-token
  */
-
 
 /**
  * @swagger
@@ -79,7 +77,6 @@
  *         body: "string"
  *         image: "string"
  */
-
 
 /**
  * @swagger
@@ -167,8 +164,6 @@
  *                      description: The brand image
  */
 
-
-
 /**
  * @swagger
  * /api/admin/brands:
@@ -193,8 +188,6 @@
  *              items:
  *                $ref: '#/components/schemas/Brand'
  */
-
-
 
 /**
  * @swagger
@@ -223,8 +216,6 @@
  *              format: int64
  *            example: 0
  */
-
-
 
 /**
  * @swagger
@@ -301,4 +292,3 @@
  *      204:
  *        description: success
  */
-

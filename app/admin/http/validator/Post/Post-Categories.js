@@ -1,7 +1,7 @@
-const joi = require('joi');
+const joi = require('joi')
 joi.objectId = require('joi-objectid')(joi)
 
-function postCategoriesValidator (data) {
+function postCategoriesValidator(data) {
   const Schema = joi.object({
     name: joi.string().required(),
     slug: joi.string().allow(null),
@@ -12,6 +12,6 @@ function postCategoriesValidator (data) {
   return Schema.validate(data)
 }
 
-module.exports = { 
-  postCategoriesValidator
+module.exports = {
+  postCategoriesValidator,
 }

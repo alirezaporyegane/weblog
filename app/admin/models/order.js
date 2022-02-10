@@ -1,32 +1,31 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 
 const Schema = mongoose.Schema
 
 const CommentSchema = new Schema({
-  text: { 
+  text: {
     type: String,
-    required: true
+    required: true,
   },
   sender: {
     type: String,
-    required: true
-  }
+    required: true,
+  },
 })
-
 
 const orderSchema = new Schema({
   title: {
     type: String,
-    required: true
+    required: true,
   },
   quntity: {
     type: Number,
-    required: true
+    required: true,
   },
   commnets: {
     type: [CommentSchema],
-    required: true
-  }
+    required: true,
+  },
 })
- 
+
 module.exports.Order = mongoose.model('Order', orderSchema)

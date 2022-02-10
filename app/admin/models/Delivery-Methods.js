@@ -1,50 +1,50 @@
 const mongoose = require('mongoose'),
-Schema = mongoose.Schema;
+  Schema = mongoose.Schema
 
 const rangesSchema = new Schema({
   from: {
-    type: Number
+    type: Number,
   },
   fee: {
-    type: Number
-  }
-});
+    type: Number,
+  },
+})
 
 const DeliveryMethodsSchema = new Schema({
   name: {
     type: String,
-    required: true
+    required: true,
   },
   description: {
-    type: String
+    type: String,
   },
   image: {
-    type: String
+    type: String,
   },
   payOnDelivery: {
-    type: Boolean
+    type: Boolean,
   },
   hideFee: {
-    type: Boolean
+    type: Boolean,
   },
   sortOrder: {
-    type: Number
+    type: Number,
   },
   active: {
-    type: Boolean
+    type: Boolean,
   },
   rangesFeeType: {
     type: Number,
-    enum: [0, 1]
+    enum: [0, 1],
   },
   calculationMethod: {
     type: Number,
-    enum: [0, 1]
+    enum: [0, 1],
   },
   baseFee: {
-    type: Number
+    type: Number,
   },
-  ranges: [rangesSchema]
-});
+  ranges: [rangesSchema],
+})
 
 module.exports = mongoose.model('DeliveryMethods', DeliveryMethodsSchema)

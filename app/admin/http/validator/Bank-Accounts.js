@@ -1,7 +1,7 @@
-const joi = require('joi');
+const joi = require('joi')
 joi.objectId = require('joi-objectid')(joi)
 
-function validatorBankAccount (data) {
+function validatorBankAccount(data) {
   const Schema = joi.object({
     name: joi.string().required(),
     owner: joi.string().required(),
@@ -12,10 +12,10 @@ function validatorBankAccount (data) {
     sheba: joi.string().allow(null),
     cardNo: joi.string().allow(null),
     sortOrder: joi.number().integer(),
-  });
-  return Schema.validate(data);
-};
+  })
+  return Schema.validate(data)
+}
 
 module.exports = {
-  validatorBankAccount
-};
+  validatorBankAccount,
+}

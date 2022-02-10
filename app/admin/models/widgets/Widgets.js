@@ -1,13 +1,16 @@
 const mongoose = require('mongoose')
-const Schema = mongoose.Schema;
+const Schema = mongoose.Schema
 
-const widgetAreaSchema =  new Schema({
-  _id: {
-    type: String,
-    unique: true,
-    required: true
+const widgetAreaSchema = new Schema(
+  {
+    _id: {
+      type: String,
+      unique: true,
+      required: true,
+    },
+    widget: [Schema.Types.Mixed],
   },
-  widget: [Schema.Types.Mixed]
-}, { _id: false })
+  { _id: false }
+)
 
 module.exports = mongoose.model('WidgetAreas', widgetAreaSchema)

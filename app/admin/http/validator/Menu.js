@@ -1,7 +1,7 @@
 const joi = require('joi')
 joi.objectId = require('joi-objectid')(joi)
 
-function menuValidator (data) {
+function menuValidator(data) {
   const Schema = joi.object({
     title: joi.string(),
     url: joi.any(),
@@ -11,7 +11,7 @@ function menuValidator (data) {
     parentId: joi.objectId(),
     components: joi.any(),
     sortOrder: joi.number(),
-    availability: joi.string()
+    availability: joi.string(),
   })
   return Schema.validate(data)
 }

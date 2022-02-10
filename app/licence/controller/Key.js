@@ -1,8 +1,8 @@
-const config = require('config');
-const Modules = require('../models/Module');
+const config = require('config')
+const Modules = require('../models/Module')
 
 class Keys {
-  async update (req, res) {
+  async update(req, res) {
     const userName = req.body.userName
     const password = req.body.password
 
@@ -13,7 +13,7 @@ class Keys {
       if (userName === user && password === pass) {
         const result = await Modules.findOne()
 
-        console.log(result);
+        console.log(result)
 
         if (result && result !== null) {
           result.modules = result.modules.splice(0, result.modules.length)
@@ -23,35 +23,35 @@ class Keys {
           await result.save()
 
           res.status(200).json({
-            success: 'true'
+            success: 'true',
           })
         } else {
           const module = new Modules({
-            modules: req.body.modules
+            modules: req.body.modules,
           })
 
           await module.save()
 
           res.status(200).json({
-            success: true
+            success: true,
           })
         }
       } else {
         res.status(401).json({
           msg: 'Unauthorized',
-          code: 401
+          code: 401,
         })
       }
     } catch (err) {
-      console.log(err);
+      console.log(err)
       res.status(500).json({
         msg: 'Internal Server Error',
-        code: 500
+        code: 500,
       })
     }
   }
 
-  async remove (req, res) {
+  async remove(req, res) {
     const userName = req.body.userName
     const password = req.body.password
 
@@ -67,17 +67,15 @@ class Keys {
         await result.save()
 
         res.status(200).json({
-          success: 'true'
+          success: 'true',
         })
       } else {
         res.status(401).json({
           msg: 'Unauthorized',
-          code: 401
+          code: 401,
         })
       }
-    } catch (err) {
-
-    }
+    } catch (err) {}
   }
 }
 

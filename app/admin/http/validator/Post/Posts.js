@@ -1,7 +1,7 @@
 const joi = require('joi')
 joi.objectId = require('joi-objectid')(joi)
 
-function postValidator (data) {
+function postValidator(data) {
   const Schema = joi.object({
     title: joi.string().required().max(150),
     slug: joi.string().allow(null).max(150),
@@ -14,7 +14,6 @@ function postValidator (data) {
     metaDescription: joi.string().allow(null),
     featured: joi.boolean(),
     primaryCategoryId: joi.objectId().required(),
-    categoryIds: joi.array().items(joi.objectId().allow(null)),
     published: joi.string().allow(null),
   })
   return Schema.validate(data)

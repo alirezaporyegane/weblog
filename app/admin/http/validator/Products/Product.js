@@ -1,7 +1,7 @@
-const joi = require('joi');
+const joi = require('joi')
 joi.objectId = require('joi-objectid')(joi)
 
-function productValidate (data) {
+function productValidate(data) {
   const schema = joi.object({
     title: joi.string().min(3).max(30).required(),
     price: joi.number().integer().required(),
@@ -10,11 +10,11 @@ function productValidate (data) {
     brand: joi.objectId(),
     typeId: joi.objectId(),
     body: joi.any(),
-    alert: joi.any()
+    alert: joi.any(),
   })
   schema.validate(data)
 }
 
-module.exports = { 
-  productValidate
+module.exports = {
+  productValidate,
 }
