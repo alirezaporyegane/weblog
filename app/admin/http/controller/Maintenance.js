@@ -63,7 +63,7 @@ class Maintenance {
       GeographicalAreasModel.deleteMany({}).then(() => {
         GeographicalAreasModel.insertMany(province).then(() => {
           res.status(200).json({
-            success: true
+            success: false
           })
         })
       })
