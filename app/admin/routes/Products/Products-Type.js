@@ -7,9 +7,9 @@ const express = require('express'),
     getById,
     create,
     update,
-    remove,
+    remove
   } = require('../../http/controller/Products/Products-Type'),
-  { authUsre, admin } = require('../../http/middleware/check-auth'),
+  { authUsre, role } = require('../../http/middleware/check-auth'),
   { hasModule } = require('../../http/middleware/modules')
 
 // products type
@@ -17,15 +17,15 @@ router.get(
   '/',
   [
     authUsre,
-    admin,
+    role(['root', 'product', 'product-type']),
     hasModule([
       'products_types',
       'units',
       'products_colors',
       'products_sizes',
       'products_tabs',
-      'products_rates',
-    ]),
+      'products_rates'
+    ])
   ],
   getAll
 )
@@ -34,15 +34,15 @@ router.get(
   '/info',
   [
     authUsre,
-    admin,
+    role(['root', 'product', 'product-type']),
     hasModule([
       'products_types',
       'units',
       'products_colors',
       'products_sizes',
       'products_tabs',
-      'products_rates',
-    ]),
+      'products_rates'
+    ])
   ],
   getInfo
 )
@@ -51,15 +51,15 @@ router.get(
   '/count',
   [
     authUsre,
-    admin,
+    role(['root', 'product', 'product-type']),
     hasModule([
       'products_types',
       'units',
       'products_colors',
       'products_sizes',
       'products_tabs',
-      'products_rates',
-    ]),
+      'products_rates'
+    ])
   ],
   getCount
 )
@@ -68,15 +68,15 @@ router.get(
   '/:id',
   [
     authUsre,
-    admin,
+    role(['root', 'product', 'product-type']),
     hasModule([
       'products_types',
       'units',
       'products_colors',
       'products_sizes',
       'products_tabs',
-      'products_rates',
-    ]),
+      'products_rates'
+    ])
   ],
   getById
 )
@@ -85,15 +85,15 @@ router.post(
   '/',
   [
     authUsre,
-    admin,
+    role(['root', 'product', 'product-type']),
     hasModule([
       'products_types',
       'units',
       'products_colors',
       'products_sizes',
       'products_tabs',
-      'products_rates',
-    ]),
+      'products_rates'
+    ])
   ],
   create
 )
@@ -102,15 +102,15 @@ router.put(
   '/:id',
   [
     authUsre,
-    admin,
+    role(['root', 'product', 'product-type']),
     hasModule([
       'products_types',
       'units',
       'products_colors',
       'products_sizes',
       'products_tabs',
-      'products_rates',
-    ]),
+      'products_rates'
+    ])
   ],
   update
 )
@@ -119,15 +119,15 @@ router.delete(
   '/:id',
   [
     authUsre,
-    admin,
+    role(['root', 'product', 'product-type']),
     hasModule([
       'products_types',
       'units',
       'products_colors',
       'products_sizes',
       'products_tabs',
-      'products_rates',
-    ]),
+      'products_rates'
+    ])
   ],
   remove
 )

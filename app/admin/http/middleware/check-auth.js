@@ -7,7 +7,7 @@ const authUsre = (req, res, next) => {
     if (!token)
       return res.status(401).json({
         msg: 'Unauthorized',
-        code: 401,
+        code: 401
       })
 
     const User = jwt.verify(token, config.get('secretKey'))
@@ -17,26 +17,31 @@ const authUsre = (req, res, next) => {
   } catch (error) {
     return res.status(401).json({
       msg: 'Unauthorized',
-      code: 401,
+      code: 401
     })
   }
 }
 
-const admin = (req, res, next) => {
-  try {
-    if (req.user.role === 'admin') {
+const role = (roles) => {
+  return async (req, res, next) => {
+    try {
+      if (typeof module === 'string') module = [module]
+      const hasRole = req.user.role && !!req.user.role.find((o) => roles.includes(o))
+
+      if (!hasRole)
+        return res.status(401).json({
+          msg: 'Unauthorized',
+          code: 401
+        })
+
       next()
-    } else
-      return res.status(401).json({
-        msg: 'Unauthorized',
-        code: 401,
+    } catch (err) {
+      res.status(500).json({
+        data: err,
+        msg: 'Internal Server Error',
+        code: 500
       })
-  } catch (err) {
-    res.status(500).json({
-      msg: 'Internal Server Error',
-      code: 500,
-    })
+    }
   }
 }
-
-module.exports = { authUsre, admin }
+module.exports = { authUsre, role }

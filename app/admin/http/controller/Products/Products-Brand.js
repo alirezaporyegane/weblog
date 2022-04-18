@@ -33,33 +33,31 @@ class brand {
       res.status(500).json({
         error: err,
         msg: 'Internal Server Error',
-        code: 500,
+        code: 500
       })
     }
   }
 
   async getinfo(req, res) {
-    const filter = {}
-    if (req.query.name) filter.title = { $regex: req.query.name }
-    if (req.query.slug) filter.slug = { $regex: req.query.slug }
-    if (req.query.altName) filter.altName = { $regex: req.query.altName }
-    if (req.query.metaTitle) filter.metaTitle = { $regex: req.query.altName }
-    if (req.query.sortOrder) filter.sortOrder = req.query.sortOrder
-    if (req.query.otherName) filter.otherName = req.query.otherName
-    if (req.query.tags) filter.tags = req.query.tags
+    try {
+      const result = await Brand.aggregate([
+        {
+          $project: {
+            _id: 0,
+            text: '$title',
+            value: '$_id'
+          }
+        }
+      ])
 
-    Brand.find(filter)
-      .select('_id, title')
-      .then((result) => {
-        res.status(200).json(result)
+      res.status(200).json(result)
+    } catch (err) {
+      res.status(500).json({
+        data: err,
+        msg: 'Internal Server Error',
+        code: 500
       })
-      .catch(() => {
-        res.status(500).json({
-          error: err,
-          msg: 'Internal Server Error',
-          code: 500,
-        })
-      })
+    }
   }
 
   async getCount(req, res) {
@@ -81,7 +79,7 @@ class brand {
         res.status(500).json({
           error: err,
           msg: 'Internal Server Error',
-          code: 500,
+          code: 500
         })
       })
   }
@@ -92,7 +90,7 @@ class brand {
     if (!mongoose.isValidObjectId(id))
       return res.status(400).json({
         msg: 'Bad Request',
-        code: 400,
+        code: 400
       })
 
     Brand.findById(id)
@@ -112,7 +110,7 @@ class brand {
               'body',
               'metaDescription',
               'metaTitle',
-              'tags',
+              'tags'
             ])
           )
       })
@@ -120,7 +118,7 @@ class brand {
         res.status(500).json({
           error: err,
           msg: 'Internal Server Error',
-          code: 500,
+          code: 500
         })
       })
   }
@@ -131,7 +129,7 @@ class brand {
       return res.status(400).json({
         error: error,
         msg: 'Bad Request',
-        code: 400,
+        code: 400
       })
 
     const brand = new Brand(
@@ -146,7 +144,7 @@ class brand {
         'typeId',
         'image',
         'otherName',
-        'body',
+        'body'
       ])
     )
 
@@ -159,7 +157,7 @@ class brand {
         res.status(500).json({
           error: err,
           msg: 'Internal Server Error',
-          code: 500,
+          code: 500
         })
       })
   }
@@ -170,7 +168,7 @@ class brand {
     if (!mongoose.isValidObjectId(id))
       return res.status(400).json({
         msg: 'Bad Request',
-        code: 400,
+        code: 400
       })
 
     const { error } = brandValidator(req.body)
@@ -178,7 +176,7 @@ class brand {
       return res.status(400).json({
         error: error,
         msg: 'Bad Request',
-        code: 400,
+        code: 400
       })
 
     Brand.findByIdAndUpdate(
@@ -195,7 +193,7 @@ class brand {
         'image',
         'otherName',
         'body',
-        'altName',
+        'altName'
       ])
     )
       .then((result) => {
@@ -207,7 +205,7 @@ class brand {
           res.status(500).json({
             error: err,
             msg: 'Internal Server Error',
-            code: 500,
+            code: 500
           })
         },
         { new: true }
@@ -220,13 +218,13 @@ class brand {
     if (!id)
       return res.status(400).json({
         msg: 'Bad Request',
-        code: 400,
+        code: 400
       })
 
     if (!mongoose.isValidObjectId(id))
       return res.status(400).json({
         msg: 'Bad Request',
-        code: 400,
+        code: 400
       })
 
     Brand.remove({ _id: id })
@@ -237,7 +235,7 @@ class brand {
         res.status(500).json({
           error: err,
           msg: 'Internal Server Error',
-          code: 500,
+          code: 500
         })
       })
   }

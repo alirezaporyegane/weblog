@@ -1,6 +1,7 @@
 const mongoose = require('mongoose'),
   _ = require('lodash'),
   ProductsGroupModel = require('../../../models/Prodcuts/Products-Groups'),
+  ProductCategoriesModel = require('../../../models/Prodcuts/Products-Categories'),
   { validatoProductGroup } = require('../../validator/Products/Products-Groups')
 
 class ProductsGroup {
@@ -29,7 +30,7 @@ class ProductsGroup {
       res.status(500).json({
         error: err,
         msg: 'Internal Server Error',
-        code: 500,
+        code: 500
       })
     }
   }
@@ -47,7 +48,7 @@ class ProductsGroup {
       res.status(500).json({
         error: err,
         msg: 'Internal Server Error',
-        code: 500,
+        code: 500
       })
     }
   }
@@ -59,9 +60,9 @@ class ProductsGroup {
           $project: {
             _id: 0,
             text: '$name',
-            value: '$_id',
-          },
-        },
+            value: '$_id'
+          }
+        }
       ])
 
       res.status(200).json(result)
@@ -69,7 +70,7 @@ class ProductsGroup {
       res.status(500).json({
         error: err,
         msg: 'Internal Server Error',
-        code: 500,
+        code: 500
       })
     }
   }
@@ -80,7 +81,7 @@ class ProductsGroup {
     if (!mongoose.isValidObjectId(id))
       return res.status(400).josn({
         msg: 'Bad Requset',
-        code: 400,
+        code: 400
       })
 
     try {
@@ -97,14 +98,14 @@ class ProductsGroup {
             'image',
             'metaTitle',
             'metaDescription',
-            'description',
+            'description'
           ])
         )
     } catch (err) {
       res.status(500).json({
         error: err,
         msg: 'Internal Server Error',
-        code: 500,
+        code: 500
       })
     }
   }
@@ -116,7 +117,7 @@ class ProductsGroup {
       return res.status(400).json({
         error: error,
         msg: 'Bad Request',
-        code: 400,
+        code: 400
       })
 
     try {
@@ -128,7 +129,7 @@ class ProductsGroup {
       res.status(500).json({
         error: err,
         msg: 'Internal Server Error',
-        code: 500,
+        code: 500
       })
     }
   }
@@ -139,7 +140,7 @@ class ProductsGroup {
     if (!mongoose.isValidObjectId(id))
       return res.status(400).json({
         msg: 'Bad Request',
-        code: 400,
+        code: 400
       })
 
     const { error } = validatoProductGroup(req.body)
@@ -148,12 +149,12 @@ class ProductsGroup {
       return res.status(400).json({
         error: error,
         msg: 'Bad Request',
-        code: 400,
+        code: 400
       })
 
     try {
       const result = await ProductsGroupModel.findByIdAndUpdate({ _id: id }, req.body, {
-        new: true,
+        new: true
       })
 
       res.status(200).json(result)
@@ -161,138 +162,34 @@ class ProductsGroup {
       res.status(500).json({
         error: err,
         msg: 'Internal Server Error',
-        code: 500,
+        code: 500
       })
     }
   }
 
   async remove(req, res) {
-    const id = req.params.id
+    try {
+      const id = req.params.id
 
-    if (!mongoose.isValidObjectId(id))
-      return res.status(400).json({
-        msg: 'Bad Request',
-        code: 400,
+      if (!mongoose.isValidObjectId(id))
+        return res.status(400).json({
+          msg: 'Bad Request',
+          code: 400
+        })
+
+      const ProductsGroup = await ProductsGroupModel.findById(id)
+
+      ProductsGroup.categories.forEach(async (item) => {
+        await ProductCategoriesModel.remove({ _id: item._id })
       })
 
-    try {
       await ProductsGroupModel.remove({ _id: id })
-
-      res.status(200).json({ success: true })
+      res.status(200).json('success')
     } catch (err) {
       res.status(500).json({
         error: err,
         msg: 'Internal Server Error',
-        code: 500,
-      })
-    }
-  }
-
-  async getAllCategory(req, res) {
-    const id = req.params.id
-
-    if (!mongoose.isValidObjectId(id))
-      return res.status(400).json({
-        msg: 'Bad Request',
-        code: 400,
-      })
-
-    try {
-      const productGroup = await ProductsGroupModel.findById(id).populate('categories.typeId')
-
-      res.status(200).json(productGroup.categories)
-    } catch (err) {
-      res.status(500).json({
-        msg: 'Internal Server Error',
-        code: 500,
-      })
-    }
-  }
-
-  async updateAllCategories(req, res) {
-    const id = req.params.id
-
-    if (!mongoose.isValidObjectId(id))
-      return res.status(400).json({
-        msg: 'Bad Request',
-        code: 400,
-      })
-
-    try {
-      const productGroup = await ProductsGroupModel.findById(id)
-
-      productGroup.categories.splice(0, productGroup.categories.length)
-
-      productGroup.categories = req.body
-
-      await productGroup.save()
-
-      res.status(200).json(productGroup.categories)
-    } catch (err) {
-      res.status(500).json({
-        msg: 'Internal Server Error',
-        code: 500,
-      })
-    }
-  }
-
-  async getByIdCategories(req, res) {
-    const groupId = req.params.groupId
-    const categoryId = req.params.categoryId
-
-    if (!mongoose.isValidObjectId(groupId))
-      return res.status(400).json({
-        msg: 'Bad Request',
-        code: 400,
-      })
-
-    try {
-      const productGroup = await ProductsGroupModel.findById(groupId)
-
-      const productCategory = await productGroup.categories.id(categoryId)
-
-      res.status(200).json(productCategory)
-    } catch (err) {
-      res.status(500).json({
-        msg: 'Internal Server Error',
-        code: 500,
-      })
-    }
-  }
-
-  async updateByIdCategories(req, res) {
-    const groupId = req.params.groupId
-    const categoryId = req.params.categoryId
-
-    if (!mongoose.isValidObjectId(groupId))
-      return res.status(400).json({
-        msg: 'Bad Request',
-        code: 400,
-      })
-
-    try {
-      const productGroup = await ProductsGroupModel.findById(groupId)
-
-      const productCategory = await productGroup.categories.id(categoryId)
-
-      Object.keys(req.body).forEach((key) => {
-        if (req.body[key] !== null) {
-          if (key !== 'parentId' && key !== 'sortOrder') {
-            productCategory[key] = req.body[key]
-          }
-        } else {
-          productCategory[key] = null
-        }
-      })
-
-      await productGroup.save()
-
-      res.status(200).json(productCategory)
-    } catch (err) {
-      console.log(err)
-      res.status(500).json({
-        msg: 'Internal Server Error',
-        code: 500,
+        code: 500
       })
     }
   }

@@ -30,21 +30,25 @@ class CurrenciesController {
         res.status(500).json({
           error: err,
           msg: 'Internal Server Error',
-          code: 500,
+          code: 500
         })
       })
   }
 
   async getInfo(req, res) {
     try {
+      const filter = {}
+      if (req.query.keyword) filter.name = { $regex: req.query.keyword }
+
       const result = await CurrenciesModel.aggregate([
+        { $match: filter },
         {
           $project: {
             _id: 0,
             text: '$name',
-            value: '$_id',
-          },
-        },
+            value: '$_id'
+          }
+        }
       ])
 
       res.status(200).json(result)
@@ -52,7 +56,7 @@ class CurrenciesController {
       res.status(500).json({
         error: err,
         msg: 'Internal Server Error',
-        code: 500,
+        code: 500
       })
     }
   }
@@ -73,7 +77,7 @@ class CurrenciesController {
         res.status(500).json({
           error: err,
           msg: 'Internal Server Error',
-          code: 500,
+          code: 500
         })
       })
   }
@@ -84,7 +88,7 @@ class CurrenciesController {
     if (!mongoose.isValidObjectId(id))
       return res.status(400).json({
         msg: 'Bad Request',
-        code: 400,
+        code: 400
       })
 
     CurrenciesModel.findById(id)
@@ -101,7 +105,7 @@ class CurrenciesController {
               'rate',
               'symbol',
               'precision',
-              'active',
+              'active'
             ])
           )
       })
@@ -109,7 +113,7 @@ class CurrenciesController {
         res.status(500).json({
           error: err,
           code: 'Internal Server Error',
-          code: 500,
+          code: 500
         })
       })
   }
@@ -120,7 +124,7 @@ class CurrenciesController {
       return res.status(400).json({
         error: error,
         msg: 'Bad Request',
-        code: 400,
+        code: 400
       })
 
     const currenciesModel = new CurrenciesModel(
@@ -132,7 +136,7 @@ class CurrenciesController {
         'rate',
         'symbol',
         'precision',
-        'active',
+        'active'
       ])
     )
 
@@ -151,7 +155,7 @@ class CurrenciesController {
               'rate',
               'symbol',
               'precision',
-              'active',
+              'active'
             ])
           )
       })
@@ -159,7 +163,7 @@ class CurrenciesController {
         res.status(500).json({
           error: err,
           msg: 'Internal Server Error',
-          code: 500,
+          code: 500
         })
       })
   }
@@ -170,7 +174,7 @@ class CurrenciesController {
     if (!mongoose.isValidObjectId(id))
       return res.status(400).json({
         msg: 'Bad Request',
-        code: 400,
+        code: 400
       })
 
     const { error } = ValidatorCurrencies(req.body)
@@ -178,7 +182,7 @@ class CurrenciesController {
       return res.status(400).json({
         err: error,
         msg: 'Bad Request',
-        success: false,
+        success: false
       })
 
     CurrenciesModel.findByIdAndUpdate(
@@ -191,7 +195,7 @@ class CurrenciesController {
         'rate',
         'symbol',
         'precision',
-        'active',
+        'active'
       ])
     )
       .then((result) => {
@@ -207,7 +211,7 @@ class CurrenciesController {
               'rate',
               'symbol',
               'precision',
-              'active',
+              'active'
             ])
           )
       })
@@ -215,7 +219,7 @@ class CurrenciesController {
         res.status(500).json({
           error: err,
           msg: 'Internal Server Error',
-          code: 500,
+          code: 500
         })
       })
   }
@@ -226,7 +230,7 @@ class CurrenciesController {
     if (!mongoose.isValidObjectId(id))
       return res.status(400).json({
         msg: 'Bad Request',
-        code: 400,
+        code: 400
       })
 
     CurrenciesModel.remove({ _id: id })
@@ -237,7 +241,7 @@ class CurrenciesController {
         res.status(500).json({
           error: err,
           msg: 'Internal Server Error',
-          code: 500,
+          code: 500
         })
       })
   }
@@ -257,12 +261,12 @@ class CurrenciesController {
           .catch(() => {
             res.status(500).json({
               msg: 'Internal Server Error',
-              code: 500,
+              code: 500
             })
           })
       } else {
         CurrencyBaseModel.updateOne({}, _.pick(req.body, ['baseId', 'displayId', 'fiscalId']), {
-          new: true,
+          new: true
         })
           .then((result) => {
             res.status(200).json(result)
@@ -270,7 +274,7 @@ class CurrenciesController {
           .catch(() => {
             res.status(500).json({
               msg: 'Internal Server Error',
-              code: 500,
+              code: 500
             })
           })
       }
@@ -285,7 +289,7 @@ class CurrenciesController {
       .catch(() => {
         res.status(500).json({
           msg: 'Internal Server Error',
-          code: 500,
+          code: 500
         })
       })
   }

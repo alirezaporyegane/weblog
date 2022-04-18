@@ -1,171 +1,240 @@
-const mongoose = require('mongoose')
-const Customer = require('../../models/Customers')
-const { ValidateCustomer } = require('../validator/Customer')
-
-class customer {
+const mongoose = require('mongoose'),
+  _ = require('lodash'),
+  bcrypt = require('bcrypt'),
+  Account = require('../../../shared/models/Account')
+class Customer {
   async getAll(req, res) {
     const skip = req.query.skip ? parseInt(req.query.skip) : ''
     const limit = req.query.limit ? parseInt(req.query.limit) : ''
-    const sort = req.query.limit ? parseInt(req.query.limit) : ''
-    Customer.find()
-      .skip(skip)
-      .limit(limit)
-      .sort({ fristName: sort })
-      .then((result) => {
-        console.log(result)
-        res.status(200).json(result)
+    const Sort = req.query.sort ? eval(`({${req.query.sort}})`) : ''
+
+    const filter = {}
+    if (req.query.userName) filter.userName = { $regex: req.query.userName }
+    if (req.query.firstName) filter.firstName = { $regex: req.query.firstName }
+    if (req.query.lastName) filter.lastName = { $regex: req.query.lastName }
+    if (req.query.companyName) filter.companyName = { $regex: req.query.companyName }
+    if (req.query.companyName) filter.companyName = { $regex: req.query.companyName }
+    if (req.query.email) filter.email = { $regex: req.query.email }
+    if (req.query.phoneNumber) filter.phoneNumber = { $regex: req.query.phoneNumber }
+    if (req.query.emailConfirmed) filter.emailConfirmed = req.query.emailConfirmed
+    if (req.query.phoneNumberConfirmed) filter.phoneNumberConfirmed = req.query.phoneNumberConfirmed
+    if (req.query.suspended) filter.suspended = req.query.suspended
+    filter.userType = 2
+
+    try {
+      const result = await Account.find(filter)
+        .skip(skip)
+        .limit(limit)
+        .sort(Sort)
+        .select([
+          'firstName',
+          'lastName',
+          'companyName',
+          'legality',
+          'image',
+          'userName',
+          'email',
+          'confirmEmail',
+          'phoneNumber',
+          'confirmPhoneNumber',
+          'suspended',
+          'confirmedProfile',
+          'code',
+          'userGroupSaleLimit',
+          'profileFields'
+        ])
+
+      res.status(200).json(result)
+    } catch (err) {
+      res.status(500).json({
+        data: err,
+        msg: 'Internal Server Error',
+        code: 500
       })
-      .catch((err) => {
-        console.log(err)
-        res.status(500).json({
-          error: err,
-          success: false,
-        })
-      })
+    }
   }
 
   async getCount(req, res) {
-    Customer.find()
-      .countDocuments()
-      .then((result) => {
-        console.log(result)
-        res.status(200).json(result)
+    const filter = {}
+    if (req.query.userName) filter.userName = { $regex: req.query.userName }
+    if (req.query.firstName) filter.firstName = { $regex: req.query.firstName }
+    if (req.query.lastName) filter.lastName = { $regex: req.query.lastName }
+    if (req.query.companyName) filter.companyName = { $regex: req.query.companyName }
+    if (req.query.companyName) filter.companyName = { $regex: req.query.companyName }
+    if (req.query.email) filter.email = { $regex: req.query.email }
+    if (req.query.phoneNumber) filter.phoneNumber = { $regex: req.query.phoneNumber }
+    if (req.query.emailConfirmed) filter.emailConfirmed = req.query.emailConfirmed
+    if (req.query.phoneNumberConfirmed) filter.phoneNumberConfirmed = req.query.phoneNumberConfirmed
+    if (req.query.suspended) filter.suspended = req.query.suspended
+    filter.userType = 2
+
+    try {
+      const result = await Account.find(filter).countDocuments()
+
+      res.status(200).json(result)
+    } catch (err) {
+      res.status(500).json({
+        data: err,
+        msg: 'Internal Server Error',
+        code: 500
       })
-      .catch((err) => {
-        console.log(err)
-        res.status(500).json({
-          error: err,
-          success: false,
-        })
-      })
+    }
   }
 
   async getById(req, res) {
     const id = req.params.id
 
-    if (!id)
-      return res.status(404).json({
-        msg: 'Id Not Found',
-        success: false,
-      })
-
     if (!mongoose.isValidObjectId(id))
       return res.status(400).json({
-        msg: 'Bad Id',
-        success: false,
+        msg: 'Bad Request',
+        code: 400
       })
 
-    Customer.findById(id)
-      .then((result) => {
-        console.log(result)
-        res.status(200).json(result)
+    try {
+      const result = await Account.findById(id)
+
+      res
+        .status(200)
+        .json(
+          _.pick(result, [
+            'firstName',
+            'lastName',
+            'companyName',
+            'legality',
+            'image',
+            'userName',
+            'email',
+            'confirmEmail',
+            'phoneNumber',
+            'confirmPhoneNumber',
+            'suspended',
+            'confirmedProfile',
+            'code',
+            'userGroupSaleLimit',
+            'profileFields'
+          ])
+        )
+    } catch (err) {
+      res.status(500).json({
+        data: err,
+        msg: 'Internal Server Error',
+        code: 500
       })
-      .catch((err) => {
-        console.log(result)
-        res.status(500).json({
-          error: err,
-          success: false,
-        })
-      })
+    }
   }
 
   async create(req, res) {
-    const { error } = ValidateCustomer(req.body)
-    if (error)
-      return res.status(400).json({
-        message: error.message,
-        success: false,
+    try {
+      const hash = await bcrypt.hash(req.body.password, 12)
+
+      const account = await Account.find({
+        userType: req.body.userType,
+        phoneNumber: req.body.phoneNumber
       })
 
-    const customer = new Customer({
-      fristName: req.body.fristName,
-      latsName: req.body.latsName,
-      email: req.body.email,
-      address: req.body.address,
-    })
-
-    customer
-      .save()
-      .then((result) => {
-        console.log(result)
-        res.status(200).json(result)
-      })
-      .catch((err) => {
-        console.log(err)
-        res.status(500).json({
-          error: err,
-          success: false,
+      if (account.length >= 1) {
+        return res.status(409).json({
+          msg: 'Conflict',
+          code: 409
         })
+      }
+
+      req.body.password = hash
+      const result = await Account.create(req.body)
+
+      res
+        .status(200)
+        .json(
+          _.pick(result, [
+            'firstName',
+            'lastName',
+            'companyName',
+            'legality',
+            'image',
+            'userName',
+            'email',
+            'confirmEmail',
+            'phoneNumber',
+            'confirmPhoneNumber',
+            'suspended',
+            'confirmedProfile',
+            'code',
+            'userGroupSaleLimit',
+            'profileFields'
+          ])
+        )
+    } catch (err) {
+      res.status(500).json({
+        data: err,
+        msg: 'Internal Server Error',
+        code: 500
       })
+    }
   }
 
   async updated(req, res) {
     const id = req.params.id
 
-    if (!id)
-      return res.status(404).json({
-        msg: 'Id Not Found',
-        success: false,
-      })
-
-    const { error } = ValidateCustomer(req.body)
-    if (error)
-      return res.status(400).json({
-        message: error.message,
-      })
-
     if (!mongoose.isValidObjectId(id))
       return res.status(400).json({
-        msg: 'Bad Id',
-        success: false,
+        msg: 'Bad Request',
+        success: false
       })
 
-    Customer.findByIdAndUpdate(id, {
-      fristName: req.body.fristName,
-      latsName: req.body.latsName,
-      email: req.body.email,
-      address: req.body.address,
-    })
-      .then((result) => {
-        console.log(result)
-        res.status(200).json(result)
+    try {
+      const result = await Account.findByIdAndUpdate(id, req.body, { new: true })
+
+      res
+        .status(200)
+        .json(
+          _.pick(result, [
+            'firstName',
+            'lastName',
+            'companyName',
+            'legality',
+            'image',
+            'userName',
+            'email',
+            'confirmEmail',
+            'phoneNumber',
+            'confirmPhoneNumber',
+            'suspended',
+            'confirmedProfile',
+            'code',
+            'userGroupSaleLimit',
+            'profileFields'
+          ])
+        )
+    } catch (err) {
+      res.status(500).json({
+        data: err,
+        msg: 'Internal Server Error',
+        code: 500
       })
-      .catch((err) => {
-        console.log(err)
-        res.status(500).json({
-          error: err,
-          success: false,
-        })
-      })
+    }
   }
 
   async remove(req, res) {
     const id = req.params.id
 
-    if (!id)
-      return res.status(400).json({
-        msg: 'Id Not Found',
-        success: false,
-      })
-
     if (!mongoose.isValidObjectId(id))
       return res.status(400).json({
-        msg: 'Bad Id',
-        success: false,
+        msg: 'Bad Request',
+        success: false
       })
 
-    Customer.findByIdAndRemove({ _id: id })
-      .then((result) => {
-        res.status(200).json(result)
+    try {
+      await Account.findByIdAndRemove({ _id: id })
+
+      res.status(200).json(true)
+    } catch (err) {
+      res.status(500).json({
+        data: err,
+        msg: 'Internal Server Error',
+        code: 500
       })
-      .catch((err) => {
-        console.log(err)
-        res.status(500).json({
-          error: err,
-          success: false,
-        })
-      })
+    }
   }
 }
 
-module.exports = new customer()
+module.exports = new Customer()

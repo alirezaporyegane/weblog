@@ -7,17 +7,45 @@ const express = require('express'),
     getById,
     create,
     update,
-    remove,
+    remove
   } = require('../../http/controller/Products/Products-Brand'),
-  { authUsre, admin } = require('../../http/middleware/check-auth'),
+  { authUsre, role } = require('../../http/middleware/check-auth'),
   { hasModule } = require('../../http/middleware/modules')
 
-router.get('/', [authUsre, admin, hasModule(['brands'])], getAll)
-router.get('/info', [authUsre, admin, hasModule(['brands'])], getinfo)
-router.get('/count', [authUsre, admin, hasModule(['brands'])], getCount)
-router.get('/:id', [authUsre, admin, hasModule(['brands'])], getById)
-router.post('/', [authUsre, admin, hasModule(['brands'])], create)
-router.put('/:id', [authUsre, admin, hasModule(['brands'])], update)
-router.delete('/:brandId', [authUsre, admin, hasModule(['brands'])], remove)
+router.get(
+  '/',
+  [authUsre, role(['root', 'product', 'product-brand']), hasModule(['brands'])],
+  getAll
+)
+router.get(
+  '/info',
+  [authUsre, role(['root', 'product', 'product-brand']), hasModule(['brands'])],
+  getinfo
+)
+router.get(
+  '/count',
+  [authUsre, role(['root', 'product', 'product-brand']), hasModule(['brands'])],
+  getCount
+)
+router.get(
+  '/:id',
+  [authUsre, role(['root', 'product', 'product-brand']), hasModule(['brands'])],
+  getById
+)
+router.post(
+  '/',
+  [authUsre, role(['root', 'product', 'product-brand']), hasModule(['brands'])],
+  create
+)
+router.put(
+  '/:id',
+  [authUsre, role(['root', 'product', 'product-brand']), hasModule(['brands'])],
+  update
+)
+router.delete(
+  '/:brandId',
+  [authUsre, role(['root', 'product', 'product-brand']), hasModule(['brands'])],
+  remove
+)
 
 module.exports = router

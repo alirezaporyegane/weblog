@@ -6,234 +6,168 @@ const mongoose = require('mongoose'),
 const colorSchema = new Schema({
   _id: {
     type: String,
-    required: true,
+    required: true
   },
   title: {
     type: String,
-    required: true,
+    required: true
   },
   altTitle: {
-    type: String,
+    type: String
   },
   color: {
     type: String,
-    required: true,
+    required: true
   },
   image: {
-    type: String,
+    type: String
   },
   sortOrder: {
     type: Number,
-    required: true,
+    required: true
   },
   active: {
-    type: Boolean,
-  },
+    type: Boolean
+  }
 })
 
 const sizeSchema = new Schema({
   _id: {
     type: String,
-    required: true,
+    required: true
   },
   title: {
     type: String,
-    required: true,
+    required: true
   },
   altTitle: {
-    type: String,
+    type: String
   },
   sortOrder: {
     type: Number,
-    required: true,
+    required: true
   },
   image: {
-    type: String,
+    type: String
   },
   active: {
-    type: Boolean,
-  },
+    type: Boolean
+  }
 })
 
 const guaranteeSchema = new Schema({
   _id: {
     type: String,
-    required: true,
+    required: true
   },
   title: {
     type: String,
-    required: true,
+    required: true
   },
   altTitle: {
-    type: String,
+    type: String
   },
   sortOrder: {
     type: Number,
-    required: true,
+    required: true
   },
   image: {
-    type: String,
+    type: String
   },
   active: {
-    type: Boolean,
-  },
+    type: Boolean
+  }
 })
 
 const optionsSchema = new Schema({
   _id: {
     type: String,
-    required: true,
+    required: true
   },
   value: {
-    type: Number,
+    type: Number
   },
   text: {
-    type: String,
-  },
-})
-
-const fieldTypes = new Schema({
-  _id: {
-    type: String,
-    required: true,
-  },
-  name: {
-    type: String,
-    required: true,
-  },
-  displayName: {
-    type: String,
-  },
-  type: {
-    type: String,
-    required: true,
-  },
-  viewData: {
-    type: String,
-  },
-  required: {
-    type: Boolean,
-  },
-  filterable: {
-    type: Boolean,
-  },
-  featured: {
-    type: Boolean,
-  },
-  fieldTypeOn: {
-    type: Number,
-  },
-  defaultValue: {
-    type: String,
-  },
-  trueLabel: {
-    type: String,
-  },
-  falseLabel: {
-    type: String,
-  },
-  unit: {
-    type: String,
-  },
-  min: {
-    type: String,
-  },
-  max: {
-    type: String,
-  },
-  precision: {
-    type: Number,
-  },
-  regex: {
-    type: String,
-  },
-  options: [optionsSchema],
-})
-
-const fieldTypeGroups = new Schema({
-  _id: {
-    type: String,
-    required: true,
-  },
-  name: {
-    type: String,
-    required: true,
-  },
-  fieldTypes: [fieldTypes],
+    type: String
+  }
 })
 
 const productTypeSchema = new Schema({
   title: {
     type: String,
-    required: true,
+    required: true
   },
   slug: {
     type: String,
-    unique: true,
+    unique: true
   },
   unit: {
     type: ObjectId,
-    ref: 'Unit',
+    ref: 'Unit'
   },
   active: {
-    type: Boolean,
+    type: Boolean
   },
   sortOrder: {
     type: Number,
-    required: true,
+    required: true
   },
   typeId: {
     type: ObjectId,
-    ref: 'ProductSetType',
+    ref: 'ProductSetType'
   },
   color: [colorSchema],
   size: [sizeSchema],
   guarantee: [guaranteeSchema],
-  fieldTypeGroups: [fieldTypeGroups],
+  fieldTypeGroups: [Schema.Types.Mixed],
   r1: {
-    type: String,
+    type: String
   },
   r2: {
-    type: String,
+    type: String
   },
   r3: {
-    type: String,
+    type: String
   },
   r4: {
-    type: String,
+    type: String
   },
   r5: {
-    type: String,
+    type: String
   },
   r6: {
-    type: String,
+    type: String
   },
   tab1: {
-    type: String,
+    type: String
   },
   tab2: {
-    type: String,
+    type: String
   },
   tab3: {
-    type: String,
+    type: String
   },
   tab4: {
-    type: String,
+    type: String
   },
   tab5: {
-    type: String,
+    type: String
   },
   tab6: {
-    type: String,
-  },
+    type: String
+  }
 })
+
+mongoose.model('Color', colorSchema)
+mongoose.model('size', sizeSchema)
+mongoose.model('Guarantee', guaranteeSchema)
 
 productTypeSchema.index({ slug: 1 }, { name: 'slug', unique: true })
 
 const optionSlugger = new slugger.SluggerOptions({
   slugPath: 'slug',
   generateFrom: 'title',
-  index: 'slug',
+  index: 'slug'
 })
 
 productTypeSchema.plugin(slugger.plugin, optionSlugger)

@@ -26,7 +26,7 @@ class Post {
         'metaDescription',
         'featured',
         'primaryCategoryId',
-        'published',
+        'published'
       ])
       .select(include)
       .then((result) => {
@@ -36,7 +36,7 @@ class Post {
         console.log(err)
         res.status(500).json({
           msg: 'Get has Failed',
-          error: err,
+          error: err
         })
       })
   }
@@ -51,7 +51,7 @@ class Post {
         console.log(err)
         res.status(500).json({
           msg: 'Get has Failed',
-          error: err,
+          error: err
         })
       })
   }
@@ -62,13 +62,13 @@ class Post {
     if (!id)
       return res.status(400).json({
         msg: 'Post not Found',
-        success: false,
+        success: false
       })
 
     if (!mongoose.isValidObjectId(id))
       return res.status(400).json({
         msg: 'Bad Request',
-        success: false,
+        success: false
       })
 
     PostController.findById(id)
@@ -89,14 +89,14 @@ class Post {
               'metaDescription',
               'featured',
               'primaryCategoryId',
-              'published',
+              'published'
             ])
           )
       })
       .catch((err) => {
         console.log(err)
         res.status(500).json({
-          error: err,
+          error: err
         })
       })
   }
@@ -110,7 +110,7 @@ class Post {
       console.log(err)
       res.status(500).json({
         msg: 'Internal Server Error',
-        code: 500,
+        code: 500
       })
     }
   }
@@ -121,7 +121,7 @@ class Post {
     if (!mongoose.isValidObjectId(id))
       return res.status(400).json({
         msg: 'Bad Request',
-        code: 400,
+        code: 400
       })
 
     PostController.findByIdAndUpdate(
@@ -138,7 +138,7 @@ class Post {
         'metaDescription',
         'featured',
         'primaryCategoryId',
-        'published',
+        'published'
       ])
     )
       .then((result) => {
@@ -158,14 +158,14 @@ class Post {
               'metaDescription',
               'featured',
               'primaryCategoryId',
-              'published',
+              'published'
             ])
           )
       })
       .catch((err) => {
         res.status(500).json({
           code: 500,
-          error: err,
+          error: err
         })
       })
   }
@@ -176,13 +176,13 @@ class Post {
     if (!id)
       return res.status(400).json({
         msg: 'Post not Found',
-        success: false,
+        success: false
       })
 
     if (!mongoose.isValidObjectId(id))
       return res.status(400).json({
         msg: 'Bad Request',
-        success: false,
+        success: false
       })
 
     PostController.remove({ _id: id })
@@ -192,7 +192,7 @@ class Post {
       .catch((err) => {
         console.log(err)
         res.status(500).json({
-          error: err,
+          error: err
         })
       })
   }

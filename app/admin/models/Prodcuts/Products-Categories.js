@@ -1,59 +1,67 @@
 const mongoose = require('mongoose'),
-  slugger = require('mongoose-slugger-plugin'),
   Schema = mongoose.Schema,
   ObjectId = Schema.ObjectId
 
-const productsCategoriesSchema = new Schema(
-  {
+const productsCategoriesSchema = new Schema({
+  name: {
+    type: String,
+    required: true
+  },
+  slug: {
+    type: String,
+    required: true
+  },
+  image: {
+    type: String
+  },
+  sortOrder: {
+    type: Number
+  },
+  metaTitle: {
+    type: String
+  },
+  description: {
+    type: String
+  },
+  metaDescription: {
+    type: String,
+    minlength: 150
+  },
+  parentId: {
+    type: String
+  },
+  altName: {
+    type: String
+  },
+  tags: {
+    type: [String]
+  },
+  otherNames: {
+    type: [String]
+  },
+  typeId: {
+    type: ObjectId,
+    ref: 'ProductSetType'
+  },
+  active: {
+    type: Boolean
+  },
+  groupId: {
+    type: ObjectId,
+    ref: 'ProductGroups',
+    required: true
+  },
+  group: {
     _id: {
-      type: String,
+      type: String
     },
     name: {
-      type: String,
+      type: String
     },
     slug: {
-      type: String,
-    },
-    image: {
-      type: String,
-    },
-    sortOrder: {
-      type: String,
-    },
-    metaTitle: {
-      type: String,
-    },
-    description: {
-      type: String,
-    },
-    metaDescription: {
-      type: String,
-    },
-    parentId: {
-      type: String,
-    },
-    altName: {
-      type: String,
-    },
-    tags: {
-      type: [String],
-    },
-    otherNames: {
-      type: [String],
-    },
-    productType: {
-      type: ObjectId,
-      ref: 'ProductSetType',
-    },
-    active: {
-      type: Boolean,
-    },
-    groupId: {
-      type: ObjectId,
-      ref: 'ProductGroups',
-    },
-  },
-  { _id: false }
-)
+      type: String
+    }
+  }
+})
 
 module.exports = mongoose.model('ProductsCategories', productsCategoriesSchema)

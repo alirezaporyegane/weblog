@@ -5,43 +5,77 @@ const mongoose = require('mongoose'),
 
 class Inventories {
   async getAll(req, res) {
-    const skip = req.query.skip ? parseInt(req.query.skip) : ''
-    const limit = req.query.limit ? parseInt(req.query.limit) : ''
-    const include = req.query.include ? req.query.include : ''
-    const name = req.query.name ? req.query.name : ''
-    const code = req.query.code ? req.query.code : ''
+    try {
+      const filter = {}
+      if (req.query.name) filter.name = { $regex: req.query.name }
+      if (req.query.code) filter.code = { $regex: req.query.code }
+      if (req.query.active) filter.active = req.query.active
+      if (req.query.sortOrder) filter.sortOrder = req.query.sortOrder
 
-    InventoriesModel.find({ name: { $regex: name }, code: { $regex: code } })
-      .skip(skip)
-      .limit(limit)
-      .select('_id name sortOrder code active')
-      .select(include)
-      .then((result) => {
-        res.status(200).json(result)
+      const skip = req.query.skip ? parseInt(req.query.skip) : ''
+      const limit = req.query.limit ? parseInt(req.query.limit) : ''
+      const Sort = req.query.sort ? eval(`({${req.query.sort}})`) : ''
+
+      const result = await InventoriesModel.find(filter)
+        .skip(skip)
+        .limit(limit)
+        .select('_id name sortOrder code active')
+        .sort(Sort)
+
+      res.status(200).json(result)
+    } catch (err) {
+      res.status(500).json({
+        data: err,
+        msg: 'Internal Server Error',
+        code: 500
       })
-      .catch((err) => {
-        res.status(500).json({
-          error: err,
-          code: 500,
-        })
+    }
+  }
+
+  async getInfo(req, res) {
+    try {
+      const filter = {}
+      if (req.query.keyword) filter.name = { $regex: req.query.keyword }
+
+      const result = await InventoriesModel.aggregate([
+        { $match: filter },
+        {
+          $project: {
+            _id: 0,
+            text: '$name',
+            value: '$_id'
+          }
+        }
+      ])
+
+      res.status(200).json(result)
+    } catch (err) {
+      res.status(500).json({
+        data: err,
+        msg: 'Internal Server Error',
+        code: 500
       })
+    }
   }
 
   async getCount(req, res) {
-    const name = req.query.name ? req.query.name : ''
-    const code = req.query.code ? req.query.code : ''
+    try {
+      const filter = {}
+      if (req.query.name) filter.name = { $regex: req.query.name }
+      if (req.query.code) filter.code = { $regex: req.query.code }
+      if (req.query.active) filter.active = req.query.active
+      if (req.query.sortOrder) filter.sortOrder = req.query.sortOrder
 
-    InventoriesModel.find({ name: { $regex: name }, code: { $regex: code } })
-      .countDocuments()
-      .then((result) => {
-        res.status(200).json(result)
+      const result = await InventoriesModel.find(filter).countDocuments()
+
+      res.status(200).json(result)
+    } catch (err) {
+      res.status(500).json({
+        data: err,
+        msg: 'Internal Server Error',
+        code: 500
       })
-      .catch((err) => {
-        res.status(500).json({
-          error: err,
-          code: 500,
-        })
-      })
+    }
   }
 
   async getById(req, res) {
@@ -50,13 +84,13 @@ class Inventories {
     if (!id)
       return res.status(400).json({
         msg: 'Inventories Not Found',
-        code: 400,
+        code: 400
       })
 
     if (!mongoose.isValidObjectId(id))
       return res.status(400).json({
         msg: 'Bad Request',
-        code: 400,
+        code: 400
       })
 
     InventoriesModel.findById(id)
@@ -66,7 +100,7 @@ class Inventories {
       .catch((err) => {
         res.status(500).json({
           error: err,
-          code: 500,
+          code: 500
         })
       })
   }
@@ -76,11 +110,11 @@ class Inventories {
     if (error)
       return res.status(400).json({
         msg: error.message,
-        code: 400,
+        code: 400
       })
 
     const inventoriesModel = new InventoriesModel({
-      ..._.pick(req.body, ['name', 'sortOrder', 'code', 'active']),
+      ..._.pick(req.body, ['name', 'sortOrder', 'code', 'active'])
     })
 
     inventoriesModel
@@ -91,7 +125,7 @@ class Inventories {
       .catch((err) => {
         res.status(500).json({
           error: err,
-          code: 500,
+          code: 500
         })
       })
   }
@@ -102,20 +136,20 @@ class Inventories {
     if (!id)
       return res.status(400).json({
         msg: 'Inventories Not Found',
-        code: 400,
+        code: 400
       })
 
     if (!mongoose.isValidObjectId(id))
       return res.status(400).json({
         msg: 'Bad Request',
-        code: 400,
+        code: 400
       })
 
     const { error } = validatoInventories(req.body)
     if (error)
       return res.status(400).json({
         msg: error.message,
-        success: false,
+        success: false
       })
 
     InventoriesModel.findByIdAndUpdate(
@@ -128,7 +162,7 @@ class Inventories {
       .catch((err) => {
         res.status(500).json({
           error: err,
-          code: 500,
+          code: 500
         })
       })
   }
@@ -139,13 +173,13 @@ class Inventories {
     if (!id)
       return res.status(400).json({
         msg: 'Inventories Not Found',
-        code: 400,
+        code: 400
       })
 
     if (!mongoose.isValidObjectId(id))
       return res.status(400).json({
         msg: 'Bad Request',
-        code: 400,
+        code: 400
       })
 
     InventoriesModel.remove({ _id: id })
@@ -155,7 +189,7 @@ class Inventories {
       .catch((err) => {
         res.status(500).json({
           error: err,
-          code: 500,
+          code: 500
         })
       })
   }

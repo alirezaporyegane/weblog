@@ -28,15 +28,15 @@ class Application {
         info: {
           title: 'Library API',
           version: '1.0.0',
-          description: 'A Express Library API',
+          description: 'A Express Library API'
         },
         servers: [
           {
-            url: 'http://localhost:4000',
-          },
-        ],
+            url: 'http://localhost:4000'
+          }
+        ]
       },
-      apis: ['./app/swagger/*.js'],
+      apis: ['./app/swagger/*.js']
     }
 
     var cssOptions = {
@@ -48,7 +48,7 @@ class Application {
       .swagger-ui .model-box-control:focus { outline: unset; }
       .swagger-ui table { margin-top: 5px }
       .swagger-ui table.model tbody tr td:first-of-type { padding: 0 0 3px 4em }
-      .swagger-ui .copy-to-clipboard button { padding-left: 30px }`,
+      .swagger-ui .copy-to-clipboard button { padding-left: 30px }`
     }
 
     const specs = swaggerJsDoc(options)
@@ -60,7 +60,7 @@ class Application {
     mongoose
       .connect(config.get('MONGODB_PORT'), {
         useFindAndModify: true,
-        useUnifiedTopology: true,
+        useUnifiedTopology: true
       })
       .then(() => {
         console.log('Db is Connect')
@@ -85,11 +85,12 @@ class Application {
     app.use('/api', require('./licence/routes/Api'))
     app.use('/api/admin', require('./admin/routes/Api'))
     app.use('/api/public', require('./general/routes/Api'))
+    app.use('/api/shared', require('./shared/routes/Api'))
 
     app.use((req, res, next) => {
       res.status(404).json({
         msg: 'Not Found',
-        code: 404,
+        code: 404
       })
     })
   }
@@ -120,7 +121,7 @@ class Application {
     winston.add(
       new winston.transports.MongoDB({
         db: config.get('MONGODB_PORT'),
-        level: 'error',
+        level: 'error'
       })
     )
 

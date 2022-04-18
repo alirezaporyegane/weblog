@@ -1,87 +1,103 @@
 const mongoose = require('mongoose'),
-  slugger = require('mongoose-slugger-plugin'),
   Schema = mongoose.Schema,
   ObjectId = Schema.ObjectId
 
 const categoriesSchema = new Schema({
   _id: {
     type: String,
-    required: true,
+    required: true
   },
   name: {
     type: String,
+    required: true,
+    maxlength: 150
   },
   slug: {
     type: String,
+    required: true
   },
   image: {
-    type: String,
+    type: String
   },
   sortOrder: {
-    type: Number,
+    type: Number
   },
   metaTitle: {
-    type: String,
+    type: String
   },
   description: {
-    type: String,
+    type: String
   },
   metaDescription: {
     type: String,
+    minlength: 50
   },
   parentId: {
-    type: String,
+    type: String
   },
   altName: {
-    type: String,
+    type: String
   },
   tags: {
-    type: [String],
+    type: [String]
   },
   otherNames: {
-    type: [String],
+    type: [String]
   },
   typeId: {
     type: ObjectId,
-    ref: 'ProductSetType',
+    ref: 'ProductSetType'
   },
   active: {
-    type: Boolean,
+    type: Boolean
   },
   groupId: {
     type: ObjectId,
     ref: 'ProductGroups',
+    required: true
   },
+  group: {
+    _id: {
+      type: String
+    },
+    name: {
+      type: String
+    },
+    slug: {
+      type: String
+    }
+  }
 })
 
 const productsGroupsSchema = new Schema({
   name: {
     type: String,
-    required: true,
+    required: true
   },
   color: {
-    type: String,
+    type: String
   },
   image: {
-    type: String,
+    type: String
   },
   slug: {
     type: String,
-    required: true,
+    required: true
   },
   metaTitle: {
-    type: String,
+    type: String
   },
   description: {
-    type: String,
+    type: String
   },
   metaDescription: {
-    type: String,
+    type: String
   },
   sortOrder: {
-    type: Number,
+    type: Number
   },
-  categories: [categoriesSchema],
+  categories: [categoriesSchema]
 })
 
+mongoose.model('ProductCategories', productsGroupsSchema)
 module.exports = mongoose.model('ProductGroups', productsGroupsSchema)

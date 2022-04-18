@@ -1,9 +1,9 @@
 const express = require('express'),
   router = express.Router(),
-  { authUsre, admin } = require('../http/middleware/check-auth'),
+  { authUsre, role } = require('../http/middleware/check-auth'),
   { getAll, updateBranding } = require('../http/controller/Setting')
 
-router.put('/branding', [authUsre, admin], updateBranding)
+router.put('/branding', [authUsre, role(['root'])], updateBranding)
 router.get('/', getAll)
 
 module.exports = router

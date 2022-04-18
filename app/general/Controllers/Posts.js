@@ -8,6 +8,7 @@ class postModel {
     const include = req.query.include ? req.query.include : ''
     const Sort = req.query.sort ? eval(`({${req.query.sort}})`) : ''
     const categorySlug = req.query.categorySlug ? req.query.categorySlug : null
+    const date = new Date()
 
     async function getPost(item) {
       const items = await Posts.find(item)
@@ -29,7 +30,7 @@ class postModel {
           'metaDescription',
           'featured',
           'primaryCategoryId',
-          'published',
+          'published'
         ])
 
       return items
@@ -49,16 +50,25 @@ class postModel {
               const subPost = subcategory && subcategory.length ? subcategory.map((o) => o._id) : ''
               Otherkeys.push(...keys, ...subPost)
 
-              const post = await getPost({ primaryCategoryId: { $in: Otherkeys } })
+              const post = await getPost({
+                primaryCategoryId: { $in: Otherkeys },
+                published: { $lte: date.toISOString() }
+              })
 
               res.status(200).json(post)
             } else {
-              const post = await getPost({ primaryCategoryId: { $in: keys } })
+              const post = await getPost({
+                primaryCategoryId: { $in: keys },
+                published: { $lte: date.toISOString() }
+              })
 
               res.status(200).json(post)
             }
           } else {
-            const post = await getPost({ primaryCategoryId: PostCategoriesSlug._id })
+            const post = await getPost({
+              primaryCategoryId: PostCategoriesSlug._id,
+              published: { $lte: date.toISOString() }
+            })
 
             res.status(200).json(post)
           }
@@ -69,30 +79,39 @@ class postModel {
             const CategorySlugs = await PostCategories.find({ parentId: items })
             if (CategorySlugs && CategorySlugs.length) {
               items.push(PostCategoriesSlug._id, ...CategorySlugs.map((o) => o._id))
-              const post = await getPost({ primaryCategoryId: { $in: items } })
+              const post = await getPost({
+                primaryCategoryId: { $in: items },
+                published: { $lte: date.toISOString() }
+              })
 
               res.status(200).json(post)
             } else {
               items.push(PostCategoriesSlug._id)
-              const post = await getPost({ primaryCategoryId: { $in: items } })
+              const post = await getPost({
+                primaryCategoryId: { $in: items },
+                published: { $lte: date.toISOString() }
+              })
 
               res.status(200).json(post)
             }
           } else {
-            const post = await getPost({ primaryCategoryId: PostCategoriesSlug._id })
+            const post = await getPost({
+              primaryCategoryId: PostCategoriesSlug._id,
+              published: { $lte: date.toISOString() }
+            })
 
             res.status(200).json(post)
           }
         }
       } else {
-        const post = await getPost()
+        const post = await getPost({ published: { $lte: date.toISOString() } })
 
         res.status(200).json(post)
       }
     } catch (err) {
       res.status(500).json({
         msg: 'Internal Server Error',
-        code: 500,
+        code: 500
       })
     }
   }
@@ -163,7 +182,7 @@ class postModel {
     } catch (err) {
       res.status(500).json({
         msg: 'Internal Server Error',
-        code: 500,
+        code: 500
       })
     }
   }
@@ -188,7 +207,7 @@ class postModel {
         'metaDescription',
         'featured',
         'primaryCategoryId',
-        'published',
+        'published'
       ])
       .select(include)
       .then((result) => {
@@ -197,7 +216,7 @@ class postModel {
       .catch(() => {
         res.status(500).json({
           msg: 'Internal Server Error',
-          code: 500,
+          code: 500
         })
       })
   }
