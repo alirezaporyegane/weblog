@@ -4,6 +4,7 @@ const mongoose = require('mongoose'),
 const banksSchema = new Schema({
   name: {
     type: String,
+    maxlength: 250,
     required: true,
   },
   code: {
