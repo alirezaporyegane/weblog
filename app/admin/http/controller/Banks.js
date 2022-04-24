@@ -2,7 +2,7 @@ const mongoose = require('mongoose'),
   _ = require('lodash'),
   BanksModel = require('../../models/Banks'),
   { validatorBanks } = require('../validator/Banks'),
-  { errorMessages } = require('../middleware/error')
+  { errorMessages } = require('../../../middleware/errorMessages')
 
 class Banks {
   async getAll(req, res) {
@@ -12,8 +12,10 @@ class Banks {
 
     const filter = {}
     if (req.query.name) filter.name = { $regex: req.query.name }
-    if (req.query.name) filter.code = { $regex: req.query.code }
+    if (req.query.code) filter.code = { $regex: req.query.code }
     if (req.query.active) filter.active = req.query.active
+
+    console.log(filter);
 
     try {
       const result = await BanksModel
@@ -58,7 +60,7 @@ class Banks {
   async getCount(req, res) {
     const filter = {}
     if (req.query.name) filter.name = { $regex: req.query.name }
-    if (req.query.name) filter.code = { $regex: req.query.code }
+    if (req.query.code) filter.code = { $regex: req.query.code }
     if (req.query.active) filter.active = req.query.active
 
     try {
