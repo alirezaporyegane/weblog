@@ -83,12 +83,24 @@ class Customer {
 
   async getInfo(req, res) {
     try {
-      const filter = {}
-      if (req.query.keyword) filter.userName = { $regex: req.query.keyword }
-      filter.userType = 0
+      const filter = []
+      if (typeof req.query.keyword === 'object') {
+        const ids = req.query.keyword.map((id) => mongoose.Types.ObjectId(id))
+        filter.push({ $match: { _id: { $in: ids }, userType: 0 } })
+      } else if (req.query.keyword && mongoose.isValidObjectId(req.query.keyword)) {
+        filter.push({ $match: { _id: mongoose.Types.ObjectId(req.query.keyword), userType: 0 } })
+      } else if (req.query.keyword) {
+        filter.push({ $match: { userName: { $regex: req.query.keyword }, userType: 0 } })
+      } else {
+        filter.push({ $match: { userType: 0 } })
+      }
 
-      const result = await Account.aggregate([
-        { $match: filter },
+      if (req.query.skip) filter.push({ $skip: parseInt(req.query.skip) })
+      if (req.query.limit) filter.push({ $limit: parseInt(req.query.limit) })
+
+      const items = await Account.aggregate([
+        { $sort: { name: 1 } },
+        ...filter,
         {
           $project: {
             _id: 0,
@@ -98,7 +110,9 @@ class Customer {
         }
       ])
 
-      res.status(200).json(result)
+      const count = await Account.find({ userType: 0 }).countDocuments()
+
+      res.status(200).json({ items, count })
     } catch (err) {
       res.status(500).json({
         data: err,

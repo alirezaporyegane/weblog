@@ -18,6 +18,45 @@ class PostCategories {
       })
   }
 
+  async getInfo(req, res) {
+    try {
+      const filter = []
+      if (typeof req.query.keyword === 'object') {
+        const ids = req.query.keyword.map((id) => mongoose.Types.ObjectId(id))
+        filter.push({ $match: { _id: { $in: ids } } })
+      } else if (req.query.keyword && mongoose.isValidObjectId(req.query.keyword)) {
+        filter.push({ $match: { _id: mongoose.Types.ObjectId(req.query.keyword) } })
+      } else if (req.query.keyword) {
+        filter.push({ $match: { name: { $regex: req.query.keyword } } })
+      }
+
+      if (req.query.limit) filter.push({ $limit: parseInt(req.query.limit) })
+      if (req.query.skip) filter.push({ $skip: parseInt(req.query.skip) })
+
+      const items = await PostCategoriesModel.aggregate([
+        { $sort: { name: 1 } },
+        ...filter,
+        {
+          $project: {
+            _id: 0,
+            text: '$name',
+            value: '$_id'
+          }
+        }
+      ])
+
+      const count = await PostCategoriesModel.find().countDocuments()
+
+      res.status(200).json({ items, count })
+    } catch (err) {
+      res.status(500).json({
+        data: err,
+        msg: 'Internal Server Error',
+        code: 500
+      })
+    }
+  }
+
   async create(req, res) {
     try {
       const createAble = req.body.filter((item) => item._id < 0)

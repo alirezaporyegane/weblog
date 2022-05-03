@@ -15,11 +15,8 @@ class Banks {
     if (req.query.code) filter.code = { $regex: req.query.code }
     if (req.query.active) filter.active = req.query.active
 
-    console.log(filter);
-
     try {
-      const result = await BanksModel
-        .find(filter)
+      const result = await BanksModel.find(filter)
         .skip(skip)
         .limit(limit)
         .sort(Sort)
@@ -37,7 +34,22 @@ class Banks {
 
   async getInfo(req, res) {
     try {
+      const filter = []
+      if (typeof req.query.keyword === 'object') {
+        const ids = req.query.keyword.map((id) => mongoose.Types.ObjectId(id))
+        filter.push({ $match: { _id: { $in: ids } } })
+      } else if (req.query.keyword && mongoose.isValidObjectId(req.query.keyword)) {
+        filter.push({ $match: { _id: mongoose.Types.ObjectId(req.query.keyword) } })
+      } else if (req.query.keyword) {
+        filter.push({ $match: { name: { $regex: req.query.keyword } } })
+      }
+
+      if (req.query.skip) filter.push({ $skip: parseInt(req.query.skip) })
+      if (req.query.limit) filter.push({ $limit: parseInt(req.query.limit) })
+
       const result = BanksModel.aggregate([
+        { $sort: { name: 1 } },
+        ...filter,
         {
           $project: {
             _id: 0,

@@ -24,28 +24,43 @@ class Banks {
     } catch (err) {
       res.status(500).json({
         msg: 'Internal Server Error',
-        code: 500,
+        code: 500
       })
     }
   }
 
   async getInfo(req, res) {
     try {
+      const filter = []
+      if (typeof req.query.keyword === 'object') {
+        const ids = req.query.keyword.map((id) => mongoose.Types.ObjectId(id))
+        filter.push({ $match: { _id: { $in: ids } } })
+      } else if (req.query.keyword && mongoose.isValidObjectId(req.query.keyword)) {
+        filter.push({ $match: { _id: mongoose.Types.ObjectId(req.query.keyword) } })
+      } else if (req.query.keyword) {
+        filter.push({ $match: { name: { $regex: req.query.keyword } } })
+      }
+
+      if (req.query.skip) filter.push({ $skip: parseInt(req.query.skip) })
+      if (req.query.limit) filter.push({ $limit: parseInt(req.query.limit) })
+
       const result = await bankAccountsModel.aggregate([
+        { $sort: { name: 1 } },
+        ...filter,
         {
           $project: {
             _id: 0,
             text: '$name',
-            value: '$_id',
-          },
-        },
+            value: '$_id'
+          }
+        }
       ])
 
       res.status(200).json(result)
     } catch (err) {
       res.status(500).json({
         msg: 'Internal Server Error',
-        code: 500,
+        code: 500
       })
     }
   }
@@ -58,7 +73,7 @@ class Banks {
     } catch (err) {
       res.status(500).json({
         msg: 'Internal Server Error',
-        code: 500,
+        code: 500
       })
     }
   }
@@ -69,7 +84,7 @@ class Banks {
     if (!mongoose.isValidObjectId(id))
       return res.status(400).json({
         msg: 'Bad Request',
-        code: 400,
+        code: 400
       })
     try {
       const result = await bankAccountsModel.findById(id)
@@ -87,13 +102,13 @@ class Banks {
             'accountNo',
             'sheba',
             'cardNo',
-            'sortOrder',
+            'sortOrder'
           ])
         )
     } catch (err) {
       res.status(500).json({
         error: err,
-        code: 500,
+        code: 500
       })
     }
   }
@@ -103,7 +118,7 @@ class Banks {
     if (error)
       return res.status(400).json({
         msg: 'bad Request',
-        code: 400,
+        code: 400
       })
 
     try {
@@ -122,13 +137,13 @@ class Banks {
             'accountNo',
             'sheba',
             'cardNo',
-            'sortOrder',
+            'sortOrder'
           ])
         )
     } catch (err) {
       res.status(500).json({
         msg: 'Internal Server Error',
-        code: 500,
+        code: 500
       })
     }
   }
@@ -139,14 +154,14 @@ class Banks {
     if (!mongoose.isValidObjectId(id))
       return res.status(400).json({
         msg: 'Bad Request',
-        code: 400,
+        code: 400
       })
 
     const { error } = validatorBankAccount(req.body)
     if (error)
       return res.status(400).json({
         msg: 'Bad Request',
-        success: false,
+        success: false
       })
 
     try {
@@ -165,13 +180,13 @@ class Banks {
             'accountNo',
             'sheba',
             'cardNo',
-            'sortOrder',
+            'sortOrder'
           ])
         )
     } catch (err) {
       res.status(500).json({
         msg: 'Internal Server Error',
-        code: 500,
+        code: 500
       })
     }
   }
@@ -182,7 +197,7 @@ class Banks {
     if (!mongoose.isValidObjectId(id))
       return res.status(400).json({
         msg: 'Bad Request',
-        code: 400,
+        code: 400
       })
 
     try {
@@ -191,7 +206,7 @@ class Banks {
     } catch (err) {
       res.status(500).json({
         msg: 'Internal Server Error',
-        code: 500,
+        code: 500
       })
     }
   }

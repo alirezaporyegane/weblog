@@ -32,29 +32,46 @@ class ProductsType {
       res.status(500).json({
         error: err,
         msg: 'Internal Server Error',
-        code: 500,
+        code: 500
       })
     }
   }
 
   async getInfo(req, res) {
     try {
-      const result = await ProductType.aggregate([
+      const filter = []
+      if (typeof req.query.keyword === 'object') {
+        const ids = req.query.keyword.map((id) =>  mongoose.Types.ObjectId(id))
+        filter.push({ $match: { _id: { $in: ids } } })
+      } else if (req.query.keyword && mongoose.isValidObjectId(req.query.keyword)) {
+        filter.push({ $match: { _id: mongoose.Types.ObjectId(req.query.keyword) } })
+      } else if (req.query.keyword) {
+        filter.push({ $match: { title: { $regex: req.query.keyword } } })
+      }
+
+      if (req.query.skip) filter.push({ $skip: parseInt(req.query.skip) })
+      if (req.query.limit) filter.push({ $limit: parseInt(req.query.limit) })
+
+      const items = await ProductType.aggregate([
+        { $sort: { title: 1 } },
+        ...filter,
         {
           $project: {
             _id: 0,
             text: '$title',
-            value: '$_id',
-          },
-        },
+            value: '$_id'
+          }
+        }
       ])
 
-      res.status(200).json(result)
+      const count = await ProductType.find().countDocuments()
+
+      res.status(200).json({ items, count })
     } catch (err) {
       res.status(500).json({
         error: err,
         msg: 'Internal Server Error',
-        code: 500,
+        code: 500
       })
     }
   }
@@ -73,7 +90,7 @@ class ProductsType {
       res.status(500).json({
         error: err,
         msg: 'Internal Server Error',
-        code: 500,
+        code: 500
       })
     }
   }
@@ -84,7 +101,7 @@ class ProductsType {
     if (!mongoose.isValidObjectId(id))
       return res.status(400).json({
         msg: 'Bad Request',
-        code: 400,
+        code: 400
       })
     try {
       const result = await ProductType.findById(id)
@@ -115,14 +132,14 @@ class ProductsType {
             'tab3',
             'tab4',
             'tab5',
-            'tab6',
+            'tab6'
           ])
         )
     } catch (err) {
       res.status(500).json({
         error: err,
         msg: 'Internal Server Error',
-        code: 500,
+        code: 500
       })
     }
   }
@@ -163,14 +180,14 @@ class ProductsType {
             'tab3',
             'tab4',
             'tab5',
-            'tab6',
+            'tab6'
           ])
         )
     } catch (err) {
       res.status(500).json({
         error: err,
         msg: 'Internal Server Error',
-        code: 500,
+        code: 500
       })
     }
   }
@@ -181,7 +198,7 @@ class ProductsType {
     if (!mongoose.isValidObjectId(id))
       return res.status(400).json({
         msg: 'Bad Request',
-        code: 400,
+        code: 400
       })
 
     // const { error } = ValidateProductType(req.body)
@@ -198,7 +215,7 @@ class ProductsType {
       res.status(500).json({
         error: err,
         msg: 'Internal Server Error',
-        code: 500,
+        code: 500
       })
     }
   }
@@ -209,7 +226,7 @@ class ProductsType {
     if (!mongoose.isValidObjectId(id))
       return res.status(400).json({
         msg: 'Bad Request',
-        code: 400,
+        code: 400
       })
 
     try {
@@ -219,7 +236,7 @@ class ProductsType {
       res.status(500).json({
         error: err,
         msg: 'Internal Server Error',
-        code: 500,
+        code: 500
       })
     }
   }

@@ -34,11 +34,22 @@ class Inventories {
 
   async getInfo(req, res) {
     try {
-      const filter = {}
-      if (req.query.keyword) filter.name = { $regex: req.query.keyword }
+      const filter = []
+      if (typeof req.query.keyword === 'object') {
+        const ids = req.query.keyword.map((id) => mongoose.Types.ObjectId(id))
+        filter.push({ $match: { _id: { $in: ids } } })
+      } else if (req.query.keyword && mongoose.isValidObjectId(req.query.keyword)) {
+        filter.push({ $match: { _id: mongoose.Types.ObjectId(req.query.keyword) } })
+      } else if (req.query.keyword) {
+        filter.push({ $match: { name: { $regex: req.query.keyword } } })
+      }
 
-      const result = await InventoriesModel.aggregate([
-        { $match: filter },
+      if (req.query.skip) filter.push({ $skip: parseInt(req.query.skip) })
+      if (req.query.limit) filter.push({ $limit: parseInt(req.query.limit) })
+
+      const items = await InventoriesModel.aggregate([
+        { $sort: { name: 1 } },
+        ...filter,
         {
           $project: {
             _id: 0,
@@ -48,7 +59,9 @@ class Inventories {
         }
       ])
 
-      res.status(200).json(result)
+      const count = await InventoriesModel.find().countDocuments()
+
+      res.status(200).json({ items, count })
     } catch (err) {
       res.status(500).json({
         data: err,

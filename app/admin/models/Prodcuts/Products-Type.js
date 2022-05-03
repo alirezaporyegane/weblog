@@ -112,10 +112,12 @@ const productTypeSchema = new Schema({
     type: Number,
     required: true
   },
-  typeId: {
-    type: ObjectId,
-    ref: 'ProductSetType'
-  },
+  typeId: [
+    {
+      type: ObjectId,
+      ref: 'ProductSetType'
+    }
+  ],
   color: [colorSchema],
   size: [sizeSchema],
   guarantee: [guaranteeSchema],

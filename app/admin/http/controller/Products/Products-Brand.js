@@ -9,8 +9,8 @@ class brand {
     if (req.query.name) filter.title = { $regex: req.query.name }
     if (req.query.slug) filter.slug = { $regex: req.query.slug }
     if (req.query.altName) filter.altName = { $regex: req.query.altName }
-    if (req.query.metaTitle) filter.metaTitle = { $regex: req.query.altName }
-    if (req.query.sortOrder) filter.sortOrder = req.query.sortOrder
+    if (req.query.metaTitle) filter.metaTitle = { $regex: req.query.metaTitle }
+    if (req.query.sortOrder) filter.sortOrder =  req.query.sortOrder
     if (req.query.otherName) filter.otherName = req.query.otherName
     if (req.query.tags) filter.tags = req.query.tags
 
@@ -40,7 +40,22 @@ class brand {
 
   async getinfo(req, res) {
     try {
-      const result = await Brand.aggregate([
+      const filter = []
+      if (typeof req.query.keyword === 'object') {
+        const ids = req.query.keyword.map((id) => mongoose.Types.ObjectId(id))
+        filter.push({ $match: { _id: { $in: ids } } })
+      } else if (req.query.keyword && mongoose.isValidObjectId(req.query.keyword)) {
+        filter.push({ $match: { _id: mongoose.Types.ObjectId(req.query.keyword) } })
+      } else if (req.query.keyword) {
+        filter.push({ $match: { title: { $regex: req.query.keyword } } })
+      }
+
+      if (req.query.limit) filter.push({ $limit: parseInt(req.query.limit) })
+      if (req.query.skip) filter.push({ $skip: parseInt(req.query.skip) })
+
+      const items = await Brand.aggregate([
+        { $sort: { title: 1 } },
+        ...filter,
         {
           $project: {
             _id: 0,
@@ -50,7 +65,9 @@ class brand {
         }
       ])
 
-      res.status(200).json(result)
+      const count = await Brand.find().countDocuments()
+
+      res.status(200).json({ items, count })
     } catch (err) {
       res.status(500).json({
         data: err,
@@ -86,7 +103,6 @@ class brand {
 
   async getById(req, res) {
     const id = req.params.id
-
     if (!mongoose.isValidObjectId(id))
       return res.status(400).json({
         msg: 'Bad Request',

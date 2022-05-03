@@ -28,7 +28,7 @@ class Inventories {
   }
 
   async getInfo(req, res) {
-    productRelationTypesModel
+    ProductRelationTypesModel
       .find()
       .select('_id primarySideName relatedSideName')
       .then((result) => {

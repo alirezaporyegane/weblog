@@ -26,30 +26,48 @@ class ProductsType {
       .catch((err) => {
         res.status(500).json({
           msg: 'Internal Server Error',
-          code: 500,
+          code: 500
         })
       })
   }
 
   async getInfo(req, res) {
-    ProductsUnitController.aggregate([
-      {
-        $project: {
-          _id: 0,
-          text: '$name',
-          value: '$_id',
-        },
-      },
-    ])
-      .then((result) => {
-        res.status(200).json(result)
+    try {
+      const filter = []
+      if (typeof req.query.keyword === 'object') {
+        const ids = req.query.keyword.map((id) => mongoose.Types.ObjectId(id))
+        filter.push({ $match: { _id: { $in: ids } } })
+      } else if (req.query.keyword && mongoose.isValidObjectId(req.query.keyword)) {
+        filter.push({ $match: { _id: mongoose.Types.ObjectId(req.query.keyword) } })
+      } else if (req.query.keyword) {
+        filter.push({ $match: { name: { $regex: req.query.keyword } } })
+      }
+
+      if (req.query.limit) filter.push({ $limit: parseInt(req.query.limit) })
+      if (req.query.skip) filter.push({ $skip: parseInt(req.query.skip) })
+
+      const items = await ProductsUnitController.aggregate([
+        { $sort: { title: 1 } },
+        ...filter,
+        {
+          $project: {
+            _id: 0,
+            text: '$name',
+            value: '$_id'
+          }
+        }
+      ])
+
+      const count = await ProductsUnitController.find().countDocuments()
+
+      res.status(200).json({ items, count })
+    } catch (err) {
+      res.status(500).json({
+        msg: 'Internal Server Error',
+        data: err,
+        code: 500
       })
-      .catch(() => {
-        res.status(500).json({
-          msg: 'Internal Server Error',
-          code: 500,
-        })
-      })
+    }
   }
 
   async getCount(req, res) {
@@ -66,7 +84,7 @@ class ProductsType {
         console.log(err)
         res.status(500).json({
           msg: 'Internal Server Error',
-          code: 500,
+          code: 500
         })
       })
   }
@@ -77,7 +95,7 @@ class ProductsType {
     if (!mongoose.isValidObjectId(id))
       return res.status(400).json({
         msg: 'Bad Request',
-        code: 400,
+        code: 400
       })
 
     ProductsUnitController.findById(id)
@@ -87,7 +105,7 @@ class ProductsType {
       .catch(() => {
         res.status(500).json({
           msg: 'Internal Server Error',
-          code: 500,
+          code: 500
         })
       })
   }
@@ -97,11 +115,11 @@ class ProductsType {
     if (error)
       return res.status(400).json({
         msg: 'Bad Request',
-        code: 400,
+        code: 400
       })
 
     const productsUnitController = new ProductsUnitController({
-      ..._.pick(req.body, ['name', 'sortOrder', 'precision', 'active']),
+      ..._.pick(req.body, ['name', 'sortOrder', 'precision', 'active'])
     })
 
     productsUnitController
@@ -112,7 +130,7 @@ class ProductsType {
       .catch(() => {
         res.status(500).json({
           msg: 'Internal Server Error',
-          code: 500,
+          code: 500
         })
       })
   }
@@ -123,14 +141,14 @@ class ProductsType {
     if (!mongoose.isValidObjectId(id))
       return res.status(400).json({
         msg: 'Bad Request',
-        code: 400,
+        code: 400
       })
 
     const { error } = ValidateUnit(req.body)
     if (error)
       return res.status(400).json({
         msg: 'Bad Request',
-        code: 400,
+        code: 400
       })
 
     ProductsUnitController.findByIdAndUpdate(
@@ -143,7 +161,7 @@ class ProductsType {
       .catch((err) => {
         res.status(500).json({
           msg: 'Internal Server Error',
-          code: 500,
+          code: 500
         })
       })
   }
@@ -154,7 +172,7 @@ class ProductsType {
     if (!mongoose.isValidObjectId(id))
       return res.status(400).json({
         msg: 'Bad Request',
-        code: 400,
+        code: 400
       })
 
     ProductsUnitController.remove({ _id: id })
@@ -165,7 +183,7 @@ class ProductsType {
         console.log(err)
         res.status(500).json({
           msg: 'Internal Server Error',
-          code: 500,
+          code: 500
         })
       })
   }
